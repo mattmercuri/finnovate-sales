@@ -1,9 +1,10 @@
+import Image from "next/image";
 import styles from "./page.module.scss";
 
 export default function Home() {
   return (
     <main className={styles.main}>
-      <h1>Finnovate Sales</h1>
+      <Image src="/logo.svg" alt="Finnovate Logo" width={430} height={95} />
     </main>
   );
 }
