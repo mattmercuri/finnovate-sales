@@ -1,6 +1,6 @@
 import Image from "next/image";
 import styles from "./page.module.scss";
-import GoogleLoginButton from "@/_components/GoogleLogin";
+import GoogleLoginButton from "@/app/_components/GoogleLogin";
 import Script from "next/script";
 
 export default function Home() {
