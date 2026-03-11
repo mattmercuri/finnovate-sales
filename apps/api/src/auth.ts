@@ -85,6 +85,7 @@ app.post('/google/callback', async (c) => {
    * - Return success response (or redirect)
    * - Wrap endpoint in error handling
    * - Add logging
+   * - Read environment variables from hono context
    */
 })
 
