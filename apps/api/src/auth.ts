@@ -79,6 +79,7 @@ app.post('/google/callback', async (c) => {
    * TODO:
    * - Move tickets, token, and claims validation to a separate service function
    * - Check if user exists in DB, if not create a new user
+   * - Adjust secure cookie settings for development vs production
    * - Generate a JWT
    * - Set JWT as HttpOnly cookie
    * - Return success response (or redirect)
