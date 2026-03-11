@@ -1,8 +1,18 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import auth from './auth.js'
+import config, { type Config } from './config.js';
 
-const app = new Hono()
+type Variables = {
+  config: Config;
+};
+
+const app = new Hono<{ Variables: Variables }>()
+
+app.use("*", async (c, next) => {
+  c.set("config", config);
+  await next();
+});
 
 app.get('/', (c) => {
   return c.text('Hello Hono!')

@@ -23,9 +23,15 @@ importers:
       '@hono/node-server':
         specifier: ^1.19.11
         version: 1.19.11(hono@4.12.7)
+      dotenv:
+        specifier: ^17.3.1
+        version: 17.3.1
       hono:
         specifier: ^4.12.7
         version: 4.12.7
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
     devDependencies:
       '@types/node':
         specifier: ^20.11.17
