@@ -1,6 +1,6 @@
 import { type CodeChallengeMethod, OAuth2Client } from "google-auth-library";
 import { environmentConfig } from "./environment.js";
-import { SignJWT, type JWTPayload } from 'jose'
+import { jwtVerify, SignJWT, type JWTPayload } from 'jose'
 
 export function getGoogleOAuthClient() {
   const config = {
@@ -33,4 +33,13 @@ export async function getRedirectUrl(stateToken: string, codeChallenge: string) 
     code_challenge_method: 'S256' as CodeChallengeMethod,
   });
   return authUrl;
+}
+
+export async function verifyOAuthState(stateToken: string) {
+  const { payload } = await jwtVerify(stateToken, new TextEncoder().encode(environmentConfig.JWT_SECRET), {
+    issuer: 'finnovate-sales',
+    audience: 'google-oauth-state'
+  });
+
+  return payload;
 }

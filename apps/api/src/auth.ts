@@ -1,7 +1,8 @@
 import { Hono } from 'hono'
-import { setCookie } from 'hono/cookie'
+import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 import crypto from 'crypto'
-import { getGoogleOAuthClient, getRedirectUrl, signOAuthState } from './auth.services.js'
+import { getGoogleOAuthClient, getRedirectUrl, signOAuthState, verifyOAuthState } from './auth.services.js'
+import { environmentConfig } from './environment.js'
 
 const app = new Hono()
 
@@ -30,11 +31,49 @@ app.get('/google', async (c) => {
 })
 
 app.post('/google/callback', async (c) => {
-  const { code } = await c.req.json();
+  const { code, state } = await c.req.json();
+  const stateFromCookie = getCookie(c, 'google_oauth_state');
+
+  if (!code || !state || !stateFromCookie) {
+    return c.json({ error: 'Missing code or state' }, 400)
+  }
+
+  if (state !== stateFromCookie) {
+    return c.json({ error: 'Invalid state' }, 400)
+  }
+
+  const statePayload = await verifyOAuthState(state)
+  const codeVerifier = statePayload.codeVerifier
+
+  if (typeof codeVerifier !== 'string' || !codeVerifier) {
+    return c.json({ error: 'Invalid PKCE verifier' }, 400)
+  }
+
+  deleteCookie(c, 'google_oauth_state', {
+    path: '/auth/google/callback'
+  })
+
   const googleOAuthClient = getGoogleOAuthClient();
+  const { tokens } = await googleOAuthClient.getToken({
+    code,
+    codeVerifier,
+    redirect_uri: environmentConfig.GOOGLE_REDIRECT_URI,
+  });
 
-  const tokens = await googleOAuthClient.getToken(code);
+  if (!tokens || !tokens.id_token) {
+    return c.json({ error: 'Failed to obtain tokens' }, 500)
+  }
 
+  const ticket = await googleOAuthClient.verifyIdToken({
+    idToken: tokens.id_token,
+    audience: environmentConfig.GOOGLE_CLIENT_ID,
+  });
+
+  const claims = ticket.getPayload();
+
+  if (!claims || !claims.email || !claims.sub) {
+    return c.json({ error: 'Invalid Google identity' }, 400)
+  }
 })
 
 export default app
