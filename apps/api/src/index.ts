@@ -1,7 +1,7 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import auth from './auth.js'
-import { getEnvironmentConfig, type EnvironmentConfig } from './environment.js';
+import { environmentConfig, type EnvironmentConfig } from './environment.js';
 
 type Variables = {
   environmentConfig: EnvironmentConfig;
@@ -10,7 +10,7 @@ type Variables = {
 const app = new Hono<{ Variables: Variables }>()
 
 app.use("*", async (c, next) => {
-  c.set("environmentConfig", getEnvironmentConfig(c));
+  c.set("environmentConfig", environmentConfig);
   await next();
 });
 
