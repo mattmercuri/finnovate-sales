@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:18.3
+    restart: always
+    shm_size: 128mb
+    volumes:
+      - pg_data:/var/lib/postgresql
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: finnovate-sales
+
+volumes:
+  pg_data:
