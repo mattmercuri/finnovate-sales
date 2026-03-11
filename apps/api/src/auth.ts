@@ -74,6 +74,16 @@ app.post('/google/callback', async (c) => {
   if (!claims || !claims.email || !claims.sub) {
     return c.json({ error: 'Invalid Google identity' }, 400)
   }
+
+  /**
+   * TODO:
+   * - Check if user exists in DB, if not create a new user
+   * - Generate a JWT
+   * - Set JWT as HttpOnly cookie
+   * - Return success response (or redirect)
+   * - Wrap endpoint in error handling
+   * - Add logging
+   */
 })
 
 export default app
