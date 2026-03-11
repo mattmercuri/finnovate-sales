@@ -1,16 +1,16 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import auth from './auth.js'
-import config, { type Config } from './config.js';
+import { getEnvironmentConfig, type EnvironmentConfig } from './environment.js';
 
 type Variables = {
-  config: Config;
+  environmentConfig: EnvironmentConfig;
 };
 
 const app = new Hono<{ Variables: Variables }>()
 
 app.use("*", async (c, next) => {
-  c.set("config", config);
+  c.set("environmentConfig", getEnvironmentConfig(c));
   await next();
 });
 
