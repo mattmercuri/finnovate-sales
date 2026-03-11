@@ -1,11 +1,8 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import auth from './auth.js'
-import { environmentConfig, type EnvironmentConfig } from './environment.js';
-
-type Variables = {
-  environmentConfig: EnvironmentConfig;
-};
+import { environmentConfig } from './environment.js';
+import type { Variables } from './types.js';
 
 const app = new Hono<{ Variables: Variables }>()
 

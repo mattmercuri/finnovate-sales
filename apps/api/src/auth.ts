@@ -2,15 +2,15 @@ import { Hono } from 'hono'
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 import crypto from 'crypto'
 import { getGoogleOAuthClient, getRedirectUrl, signOAuthState, verifyOAuthState } from './auth.services.js'
-import { environmentConfig } from './environment.js'
+import type { Variables } from './types.js'
 
-const app = new Hono()
+const auth = new Hono<{ Variables: Variables }>()
 
-app.get('/', (c) => {
+auth.get('/', (c) => {
   return c.json({ message: 'Authentication endpoint' })
 })
 
-app.get('/google', async (c) => {
+auth.get('/google', async (c) => {
   const nonce = crypto.randomBytes(16).toString('hex')
   const codeVerifier = crypto.randomBytes(32).toString('base64url')
   const codeChallenge = crypto.createHash('sha256').update(codeVerifier).digest('base64url')
@@ -30,7 +30,7 @@ app.get('/google', async (c) => {
   return c.redirect(authUrl)
 })
 
-app.post('/google/callback', async (c) => {
+auth.post('/google/callback', async (c) => {
   const { code, state } = await c.req.json();
   const stateFromCookie = getCookie(c, 'google_oauth_state');
 
@@ -52,6 +52,8 @@ app.post('/google/callback', async (c) => {
   deleteCookie(c, 'google_oauth_state', {
     path: '/auth/google/callback'
   })
+
+  const environmentConfig = c.get('environmentConfig')
 
   const googleOAuthClient = getGoogleOAuthClient();
   const { tokens } = await googleOAuthClient.getToken({
@@ -89,4 +91,4 @@ app.post('/google/callback', async (c) => {
    */
 })
 
-export default app
+export default auth
