@@ -2,7 +2,6 @@
   "name": "@finnovate-sales/db",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -28,8 +27,6 @@
     "pg": "^8.20.0"
   },
   "exports": {
-    ".": {
-      "import": "./index.ts"
-    }
+    ".": "./index.ts"
   }
 }
