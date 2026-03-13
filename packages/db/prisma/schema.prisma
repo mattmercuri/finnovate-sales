@@ -12,7 +12,11 @@ datasource db {
   provider = "postgresql"
 }
 
-model User { 
-  id    Int     @id @default(autoincrement()) 
-  email String  @unique
+model User {
+  id              Int     @id @default(autoincrement())
+  email           String  @unique
+  name            String?
+  givenName       String?
+  familyName      String?
+  profileImageUrl String?
 }
