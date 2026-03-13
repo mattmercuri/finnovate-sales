@@ -7,3 +7,7 @@ This project uses a local PostgreSQL DB that is managed through `docker compose`
 
 ### Environment Variables
 Each monorepo package has its own `.env.example` in it that should demonstrate what environment variables should be set.
+
+## TODO List
+- Added `zod-openai` to automatically create OpenAI specifications for the REST API
+- Added `eslint` and configuration to all packages and apps (add global `turborepo` command)

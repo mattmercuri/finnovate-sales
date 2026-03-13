@@ -15,7 +15,7 @@ auth.get('/google', async (c) => {
 
   setCookie(c, 'google_oauth_state', stateToken, {
     httpOnly: true,
-    secure: !c.get('environmentConfig').IS_DEV,
+    secure: !c.var.environmentConfig.IS_DEV,
     sameSite: 'strict',
     path: '/auth/google/callback',
     maxAge: 60 * 5
@@ -49,13 +49,11 @@ auth.post('/google/callback', async (c) => {
     path: '/auth/google/callback'
   })
 
-  const environmentConfig = c.get('environmentConfig')
-
   const googleOAuthClient = getGoogleOAuthClient();
   const { tokens } = await googleOAuthClient.getToken({
     code,
     codeVerifier,
-    redirect_uri: environmentConfig.GOOGLE_REDIRECT_URI,
+    redirect_uri: c.var.environmentConfig.GOOGLE_REDIRECT_URI,
   });
 
   if (!tokens || !tokens.id_token) {
@@ -64,7 +62,7 @@ auth.post('/google/callback', async (c) => {
 
   const ticket = await googleOAuthClient.verifyIdToken({
     idToken: tokens.id_token,
-    audience: environmentConfig.GOOGLE_CLIENT_ID,
+    audience: c.var.environmentConfig.GOOGLE_CLIENT_ID,
   });
 
   const claims = ticket.getPayload();
@@ -85,13 +83,13 @@ auth.post('/google/callback', async (c) => {
 
   setCookie(c, 'access_token', accessToken, {
     httpOnly: true,
-    secure: !environmentConfig.IS_DEV,
+    secure: !c.var.environmentConfig.IS_DEV,
     sameSite: 'strict',
     maxAge: authConfig.accessExpiration,
   })
   setCookie(c, 'refresh_token', refreshToken, {
     httpOnly: true,
-    secure: !environmentConfig.IS_DEV,
+    secure: !c.var.environmentConfig.IS_DEV,
     sameSite: 'strict',
     maxAge: authConfig.refreshExpiration,
   })
