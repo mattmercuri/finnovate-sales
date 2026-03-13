@@ -1,14 +1,10 @@
 import { Hono } from 'hono'
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 import crypto from 'crypto'
-import { getGoogleOAuthClient, getRedirectUrl, signOAuthState, verifyOAuthState } from './auth.services.js'
+import { getGoogleOAuthClient, getRedirectUrl, signOAuthState, verifyOAuthState, signJWTToken, authConfig } from './auth.services.js'
 import type { Variables } from './types.js'
 
 const auth = new Hono<{ Variables: Variables }>()
-
-auth.get('/', (c) => {
-  return c.json({ message: 'Authentication endpoint' })
-})
 
 auth.get('/google', async (c) => {
   const nonce = crypto.randomBytes(16).toString('hex')
@@ -19,10 +15,10 @@ auth.get('/google', async (c) => {
 
   setCookie(c, 'google_oauth_state', stateToken, {
     httpOnly: true,
-    secure: true,
+    secure: !c.get('environmentConfig').IS_DEV,
     sameSite: 'strict',
     path: '/auth/google/callback',
-    maxAge: 60 * 10
+    maxAge: 60 * 5
   })
 
   const authUrl = await getRedirectUrl(stateToken, codeChallenge)
@@ -77,17 +73,45 @@ auth.post('/google/callback', async (c) => {
     return c.json({ error: 'Invalid Google identity' }, 400)
   }
 
+  // Check if user exists in DB, if not create a new user (upsert to get new info?)
+
+  const jwtPayload = {
+    sub: claims.sub,
+    email: claims.email,
+    name: claims.name || ''
+  }
+  const accessToken = await signJWTToken(jwtPayload, 'access')
+  const refreshToken = await signJWTToken(jwtPayload, 'refresh')
+
+  setCookie(c, 'access_token', accessToken, {
+    httpOnly: true,
+    secure: !environmentConfig.IS_DEV,
+    sameSite: 'strict',
+    maxAge: authConfig.accessExpiration,
+  })
+  setCookie(c, 'refresh_token', refreshToken, {
+    httpOnly: true,
+    secure: !environmentConfig.IS_DEV,
+    sameSite: 'strict',
+    maxAge: authConfig.refreshExpiration,
+  })
+
+  return c.json({
+    success: true,
+    user: {
+      email: claims.email,
+      name: claims.name
+    }
+  })
+
   /**
    * TODO:
-   * - Move tickets, token, and claims validation to a separate service function
    * - Check if user exists in DB, if not create a new user
-   * - Adjust secure cookie settings for development vs production
    * - Generate a JWT
    * - Set JWT as HttpOnly cookie
    * - Return success response (or redirect)
    * - Wrap endpoint in error handling
    * - Add logging
-   * - Read environment variables from hono context
    */
 })
 

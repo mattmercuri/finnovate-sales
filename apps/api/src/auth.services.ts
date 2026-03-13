@@ -2,24 +2,30 @@ import { type CodeChallengeMethod, OAuth2Client } from "google-auth-library";
 import { environmentConfig } from "./environment.js";
 import { jwtVerify, SignJWT, type JWTPayload } from 'jose'
 
-export function getGoogleOAuthClient() {
-  const config = {
+export const authConfig = {
+  googleClientConfig: {
     clientId: environmentConfig.GOOGLE_CLIENT_ID,
     clientSecret: environmentConfig.GOOGLE_CLIENT_SECRET,
     redirectUri: environmentConfig.GOOGLE_REDIRECT_URI,
-  };
-  const client = new OAuth2Client(config);
+  },
+  jwtSecret: environmentConfig.JWT_SECRET,
+  accessExpiration: 60 * 15,
+  refreshExpiration: 60 * 60 * 24 * 7
+}
+
+export function getGoogleOAuthClient() {
+  const client = new OAuth2Client(authConfig.googleClientConfig);
   return client;
 }
 
 export async function signOAuthState(payload: JWTPayload) {
   return await new SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
+    .setProtectedHeader({ alg: 'HS256', typ: 'code' })
     .setIssuedAt()
     .setIssuer('finnovate-sales')
     .setAudience('google-oauth-state')
     .setExpirationTime('10m')
-    .sign(new TextEncoder().encode(environmentConfig.JWT_SECRET));
+    .sign(new TextEncoder().encode(authConfig.jwtSecret));
 }
 
 export async function getRedirectUrl(stateToken: string, codeChallenge: string) {
@@ -36,10 +42,29 @@ export async function getRedirectUrl(stateToken: string, codeChallenge: string) 
 }
 
 export async function verifyOAuthState(stateToken: string) {
-  const { payload } = await jwtVerify(stateToken, new TextEncoder().encode(environmentConfig.JWT_SECRET), {
+  const { payload } = await jwtVerify(stateToken, new TextEncoder().encode(authConfig.jwtSecret), {
     issuer: 'finnovate-sales',
     audience: 'google-oauth-state'
   });
 
   return payload;
+}
+
+type SignJWtPayload = {
+  sub: string; // user ID
+  email: string;
+  name?: string;
+}
+
+export async function signJWTToken(payload: SignJWtPayload, type: 'access' | 'refresh' = 'access') {
+  const typeString = type === 'access' ? 'JWT' : 'refresh';
+  const expirationTime = type === 'access' ? authConfig.accessExpiration : authConfig.refreshExpiration;
+
+  return await new SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256', typ: typeString })
+    .setIssuedAt()
+    .setIssuer('finnovate-sales')
+    .setAudience('finnovate-users')
+    .setExpirationTime(expirationTime)
+    .sign(new TextEncoder().encode(authConfig.jwtSecret));
 }
