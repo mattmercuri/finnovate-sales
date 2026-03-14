@@ -1,12 +1,23 @@
-import { Hono } from 'hono'
+import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 import crypto from 'crypto'
 import { getGoogleOAuthClient, getRedirectUrl, signOAuthState, verifyOAuthState, signJWTToken, authConfig } from './auth.services.js'
 import type { Variables } from '../types.js'
+import { CallbackSchema, OAuthRequestSchema } from './auth.schema.js'
 
-const auth = new Hono<{ Variables: Variables }>()
+const auth = new OpenAPIHono<{ Variables: Variables }>()
 
-auth.get('/google', async (c) => {
+const requestOAuthRoute = createRoute({
+  method: 'get',
+  path: '/google',
+  responses: {
+    302: {
+      description: 'Redirect to Google OAuth consent screen'
+    }
+  }
+})
+
+auth.openapi(requestOAuthRoute, async (c) => {
   const nonce = crypto.randomBytes(16).toString('hex')
   const codeVerifier = crypto.randomBytes(32).toString('base64url')
   const codeChallenge = crypto.createHash('sha256').update(codeVerifier).digest('base64url')
@@ -26,7 +37,38 @@ auth.get('/google', async (c) => {
   return c.redirect(authUrl)
 })
 
-auth.post('/google/callback', async (c) => {
+const callbackRoute = createRoute({
+  method: 'post',
+  path: '/google/callback',
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: OAuthRequestSchema
+        }
+      }
+    }
+  },
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: CallbackSchema
+        }
+      },
+      description: 'Successful Google OAuth callback'
+    },
+    400: {
+      description: 'Invalid request'
+    },
+    500: {
+      description: 'Internal server error'
+    }
+  }
+
+})
+
+auth.openapi(callbackRoute, async (c) => {
   const { code, state } = await c.req.json();
   const stateFromCookie = getCookie(c, 'google_oauth_state');
 
@@ -112,8 +154,9 @@ auth.post('/google/callback', async (c) => {
   return c.json({
     success: true,
     user: {
-      email: claims.email,
-      name: claims.name
+      email: user.email,
+      name: user.name,
+      profilePicture: user.profileImageUrl
     }
   })
 

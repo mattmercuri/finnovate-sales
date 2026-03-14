@@ -1,11 +1,11 @@
 import { serve } from '@hono/node-server'
-import { Hono } from 'hono'
+import { OpenAPIHono } from '@hono/zod-openapi';
 import auth from './auth/auth.js'
 import db from './db.js'
 import { environmentConfig } from './environment.js';
 import type { Variables } from './types.js';
 
-const app = new Hono<{ Variables: Variables }>()
+const app = new OpenAPIHono<{ Variables: Variables }>()
 
 app.use("*", async (c, next) => {
   c.set("db", db);
@@ -14,6 +14,15 @@ app.use("*", async (c, next) => {
 });
 
 app.route('/auth', auth)
+
+app.doc('/doc', {
+  openapi: '3.0.0',
+  info: {
+    version: '1.0.0',
+    title: 'Finnovate Sales API',
+    description: 'API documentation for Finnovate Sales',
+  }
+})
 
 serve({
   fetch: app.fetch,
