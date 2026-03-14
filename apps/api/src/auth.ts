@@ -71,12 +71,27 @@ auth.post('/google/callback', async (c) => {
     return c.json({ error: 'Invalid Google identity' }, 400)
   }
 
-  // Check if user exists in DB, if not create a new user (upsert to get new info?)
+  const user = await c.var.db.user.upsert({
+    where: { email: claims.email },
+    create: {
+      email: claims.email,
+      name: claims.name,
+      givenName: claims.given_name,
+      familyName: claims.family_name,
+      profileImageUrl: claims.picture,
+    },
+    update: {
+      name: claims.name,
+      givenName: claims.given_name,
+      familyName: claims.family_name,
+      profileImageUrl: claims.picture,
+    },
+  })
 
   const jwtPayload = {
-    sub: claims.sub,
-    email: claims.email,
-    name: claims.name || ''
+    sub: user.id.toString(),
+    email: user.email,
+    name: user.name || ''
   }
   const accessToken = await signJWTToken(jwtPayload, 'access')
   const refreshToken = await signJWTToken(jwtPayload, 'refresh')
