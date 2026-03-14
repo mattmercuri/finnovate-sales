@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 import crypto from 'crypto'
 import { getGoogleOAuthClient, getRedirectUrl, signOAuthState, verifyOAuthState, signJWTToken, authConfig } from './auth.services.js'
-import type { Variables } from './types.js'
+import type { Variables } from '../types.js'
 
 const auth = new Hono<{ Variables: Variables }>()
 

@@ -1,6 +1,6 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
-import auth from './auth.js'
+import auth from './auth/auth.js'
 import db from './db.js'
 import { environmentConfig } from './environment.js';
 import type { Variables } from './types.js';
