@@ -2,8 +2,8 @@ import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 import crypto from 'node:crypto'
 import { getGoogleOAuthClient, getRedirectUrl, signOAuthState, verifyOAuthState, signJWTToken, authConfig } from './auth.services.js'
-import type { Variables } from '../types'
 import { CallbackSchema, OAuthRequestSchema } from './auth.schema'
+import type { Variables } from '../types'
 
 const auth = new OpenAPIHono<{ Variables: Variables }>()
 
