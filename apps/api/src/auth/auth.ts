@@ -162,10 +162,6 @@ auth.openapi(callbackRoute, async (c) => {
 
   /**
    * TODO:
-   * - Check if user exists in DB, if not create a new user
-   * - Generate a JWT
-   * - Set JWT as HttpOnly cookie
-   * - Return success response (or redirect)
    * - Wrap endpoint in error handling
    * - Add logging
    */
