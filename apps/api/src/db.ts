@@ -1,3 +1,3 @@
-import { prisma, type DB } from '@finnovate-sales/db'
-export type { DB }
+import { prisma } from '@finnovate-sales/db'
 export default prisma
+export type DB = typeof prisma

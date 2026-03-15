@@ -28,10 +28,6 @@
     "pg": "^8.20.0"
   },
   "exports": {
-    ".": {
-      "types": "./index.ts",
-      "import": "./index.ts",
-      "default": "./index.ts"
-    }
+    ".": "./index.ts"
   }
 }
