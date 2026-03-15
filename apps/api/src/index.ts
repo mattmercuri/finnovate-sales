@@ -1,9 +1,11 @@
 import { serve } from '@hono/node-server'
 import { OpenAPIHono } from '@hono/zod-openapi';
+import { swaggerUI } from '@hono/swagger-ui';
 import auth from './auth/auth'
 import db from './db'
 import { environmentConfig } from './environment';
 import type { Variables } from './types';
+
 
 const app = new OpenAPIHono<{ Variables: Variables }>()
 
@@ -23,6 +25,7 @@ app.doc('/doc', {
     description: 'API documentation for Finnovate Sales',
   }
 })
+app.get('/docs', swaggerUI({ url: '/doc' }))
 
 serve({
   fetch: app.fetch,
