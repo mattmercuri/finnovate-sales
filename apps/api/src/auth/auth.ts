@@ -1,6 +1,6 @@
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
-import crypto from 'crypto'
+import crypto from 'node:crypto'
 import { getGoogleOAuthClient, getRedirectUrl, signOAuthState, verifyOAuthState, signJWTToken, authConfig } from './auth.services.js'
 import type { Variables } from '../types.js'
 import { CallbackSchema, OAuthRequestSchema } from './auth.schema.js'
