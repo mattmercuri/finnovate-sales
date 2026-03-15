@@ -1,5 +1,5 @@
 import { type CodeChallengeMethod, OAuth2Client } from "google-auth-library";
-import { environmentConfig } from "../environment.js";
+import { environmentConfig } from "../environment";
 import { jwtVerify, SignJWT, type JWTPayload } from 'jose'
 
 export const authConfig = {

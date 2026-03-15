@@ -1,9 +1,9 @@
 import { serve } from '@hono/node-server'
 import { OpenAPIHono } from '@hono/zod-openapi';
-import auth from './auth/auth.js'
-import db from './db.js'
-import { environmentConfig } from './environment.js';
-import type { Variables } from './types.js';
+import auth from './auth/auth'
+import db from './db'
+import { environmentConfig } from './environment';
+import type { Variables } from './types';
 
 const app = new OpenAPIHono<{ Variables: Variables }>()
 

@@ -1,5 +1,5 @@
-import type { DB } from "./db.js";
-import type { EnvironmentConfig } from "./environment.js";
+import type { DB } from "./db";
+import type { EnvironmentConfig } from "./environment";
 
 export type Variables = {
   environmentConfig: EnvironmentConfig;
