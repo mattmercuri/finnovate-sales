@@ -27,7 +27,7 @@ app.use("*", async (c, next) => {
 app.use('/api/*', (c, next) => {
   const path = c.req.path
 
-  if (['/google', '/google/callback'].includes(path)) {
+  if (['/api/auth/google', '/api/auth/google/callback'].includes(path)) {
     return next()
   }
 
