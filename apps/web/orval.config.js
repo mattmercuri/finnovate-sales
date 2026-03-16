@@ -1,5 +1,7 @@
 import { defineConfig } from 'orval'
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 export default defineConfig({
   api: {
     output: {
@@ -7,6 +9,7 @@ export default defineConfig({
       target: './src/api',
       schemas: './src/schemas',
       client: 'react-query',
+      baseUrl: isProduction ? 'https://api.finnovate-sales.com' : 'http://localhost:3001',
     },
     input: 'http://localhost:3001/doc',
   }

@@ -41,7 +41,7 @@ export const getPostAuthGoogleUrl = () => {
 
   
 
-  return `/auth/google`
+  return `http://localhost:3001/auth/google`
 }
 
 export const postAuthGoogle = async ( options?: RequestInit): Promise<postAuthGoogleResponse> => {
@@ -134,7 +134,7 @@ export const getPostAuthGoogleCallbackUrl = () => {
 
   
 
-  return `/auth/google/callback`
+  return `http://localhost:3001/auth/google/callback`
 }
 
 export const postAuthGoogleCallback = async (oAuthCallbackRequest: OAuthCallbackRequest, options?: RequestInit): Promise<postAuthGoogleCallbackResponse> => {
