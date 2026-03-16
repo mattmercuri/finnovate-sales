@@ -3,7 +3,7 @@ import { defineConfig } from 'orval'
 export default defineConfig({
   api: {
     output: {
-      mode: 'single',
+      mode: 'split-tags',
       target: './src/api.ts',
       schemas: './src/schemas',
       client: 'react-query',
