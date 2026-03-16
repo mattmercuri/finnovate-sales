@@ -8,6 +8,7 @@ import type { Variables } from '../types'
 const auth = new OpenAPIHono<{ Variables: Variables }>()
 
 const requestOAuthRoute = createRoute({
+  tags: ['Authentication'],
   method: 'get',
   path: '/google',
   responses: {
@@ -38,6 +39,7 @@ auth.openapi(requestOAuthRoute, async (c) => {
 })
 
 const callbackRoute = createRoute({
+  tags: ['Authentication'],
   method: 'post',
   path: '/google/callback',
   request: {
