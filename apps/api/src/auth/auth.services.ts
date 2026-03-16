@@ -65,6 +65,6 @@ export async function signJWTToken(payload: SignJWtPayload, type: 'access' | 're
     .setIssuedAt()
     .setIssuer('finnovate-sales')
     .setAudience('finnovate-users')
-    .setExpirationTime(expirationTime)
+    .setExpirationTime(`${expirationTime}s`)
     .sign(new TextEncoder().encode(authConfig.jwtSecret));
 }

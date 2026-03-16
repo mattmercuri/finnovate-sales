@@ -34,7 +34,8 @@ auth.openapi(requestOAuthRoute, async (c) => {
     httpOnly: true,
     secure: !c.var.environmentConfig.IS_DEV,
     sameSite: 'strict',
-    maxAge: 60 * 5
+    maxAge: 60 * 5,
+    path: '/'
   })
 
   const authUrl = await getRedirectUrl(stateToken, codeChallenge)
@@ -94,9 +95,7 @@ auth.openapi(callbackRoute, async (c) => {
     return c.json({ error: 'Invalid PKCE verifier' }, 400)
   }
 
-  deleteCookie(c, 'google_oauth_state', {
-    path: '/auth/google/callback'
-  })
+  deleteCookie(c, 'google_oauth_state')
 
   const googleOAuthClient = getGoogleOAuthClient();
   const { tokens } = await googleOAuthClient.getToken({
@@ -150,12 +149,14 @@ auth.openapi(callbackRoute, async (c) => {
     secure: !c.var.environmentConfig.IS_DEV,
     sameSite: 'strict',
     maxAge: authConfig.accessExpiration,
+    path: '/'
   })
   setCookie(c, 'refresh_token', refreshToken, {
     httpOnly: true,
     secure: !c.var.environmentConfig.IS_DEV,
     sameSite: 'strict',
     maxAge: authConfig.refreshExpiration,
+    path: '/'
   })
 
   return c.json({
