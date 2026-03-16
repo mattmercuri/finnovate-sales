@@ -17,24 +17,25 @@ import type {
 
 import type {
   OAuthCallbackRequest,
-  OAuthCallbackResponse
+  OAuthCallbackResponse,
+  RequestGoogleOAuthResponse
 } from '../../schemas';
 
 
 
 
 
-export type postAuthGoogleResponse302 = {
-  data: void
-  status: 302
+export type postAuthGoogleResponse200 = {
+  data: RequestGoogleOAuthResponse
+  status: 200
 }
 
-;
-export type postAuthGoogleResponseError = (postAuthGoogleResponse302) & {
+export type postAuthGoogleResponseSuccess = (postAuthGoogleResponse200) & {
   headers: Headers;
 };
+;
 
-export type postAuthGoogleResponse = (postAuthGoogleResponseError)
+export type postAuthGoogleResponse = (postAuthGoogleResponseSuccess)
 
 export const getPostAuthGoogleUrl = () => {
 
@@ -64,7 +65,7 @@ export const postAuthGoogle = async ( options?: RequestInit): Promise<postAuthGo
 
 
 
-export const getPostAuthGoogleMutationOptions = <TError = void,
+export const getPostAuthGoogleMutationOptions = <TError = unknown,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogle>>, TError,void, TContext>, fetch?: RequestInit}
 ): UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogle>>, TError,void, TContext> => {
 
@@ -93,9 +94,9 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type PostAuthGoogleMutationResult = NonNullable<Awaited<ReturnType<typeof postAuthGoogle>>>
     
-    export type PostAuthGoogleMutationError = void
+    export type PostAuthGoogleMutationError = unknown
 
-    export const usePostAuthGoogle = <TError = void,
+    export const usePostAuthGoogle = <TError = unknown,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogle>>, TError,void, TContext>, fetch?: RequestInit}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postAuthGoogle>>,

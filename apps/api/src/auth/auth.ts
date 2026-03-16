@@ -2,7 +2,7 @@ import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 import crypto from 'node:crypto'
 import { getGoogleOAuthClient, getRedirectUrl, signOAuthState, verifyOAuthState, signJWTToken, authConfig } from './auth.services.js'
-import { CallbackSchema, OAuthRequestSchema } from './auth.schema'
+import { CallbackSchema, OAuthRequestSchema, RequestGoogleOAuthSchema } from './auth.schema'
 import type { Variables } from '../types'
 
 const auth = new OpenAPIHono<{ Variables: Variables }>()
@@ -12,7 +12,12 @@ const requestOAuthRoute = createRoute({
   method: 'post',
   path: '/google',
   responses: {
-    302: {
+    200: {
+      content: {
+        'application/json': {
+          schema: RequestGoogleOAuthSchema
+        }
+      },
       description: 'Redirect to Google OAuth consent screen'
     }
   }
@@ -35,7 +40,7 @@ auth.openapi(requestOAuthRoute, async (c) => {
 
   const authUrl = await getRedirectUrl(stateToken, codeChallenge)
 
-  return c.redirect(authUrl)
+  return c.json({ redirectTo: authUrl })
 })
 
 const callbackRoute = createRoute({

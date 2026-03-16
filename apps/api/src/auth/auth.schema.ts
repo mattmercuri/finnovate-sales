@@ -1,5 +1,9 @@
 import { z } from '@hono/zod-openapi'
 
+export const RequestGoogleOAuthSchema = z.object({
+  redirectTo: z.url()
+}).openapi('RequestGoogleOAuthResponse')
+
 export const UserSchema = z.object({
   id: z.number(),
   email: z.email(),
