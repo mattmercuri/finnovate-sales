@@ -9,7 +9,7 @@ const auth = new OpenAPIHono<{ Variables: Variables }>()
 
 const requestOAuthRoute = createRoute({
   tags: ['Authentication'],
-  method: 'get',
+  method: 'post',
   path: '/google',
   responses: {
     302: {
