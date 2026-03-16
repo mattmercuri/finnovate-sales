@@ -154,6 +154,7 @@ auth.openapi(callbackRoute, async (c) => {
   return c.json({
     success: true,
     user: {
+      id: user.id,
       email: user.email,
       name: user.name,
       profilePicture: user.profileImageUrl
