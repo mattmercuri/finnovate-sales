@@ -21,7 +21,10 @@ import type {
   RequestGoogleOAuthResponse
 } from '../../schemas';
 
+import { customFetch } from '.././custom-fetch';
 
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
@@ -47,34 +50,28 @@ export const getPostAuthGoogleUrl = () => {
 
 export const postAuthGoogle = async ( options?: RequestInit): Promise<postAuthGoogleResponse> => {
   
-  const res = await fetch(getPostAuthGoogleUrl(),
+  return customFetch<postAuthGoogleResponse>(getPostAuthGoogleUrl(),
   {      
     ...options,
     method: 'POST'
     
     
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: postAuthGoogleResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as postAuthGoogleResponse
-}
+);}
   
 
 
 
 export const getPostAuthGoogleMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogle>>, TError,void, TContext>, fetch?: RequestInit}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogle>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogle>>, TError,void, TContext> => {
 
 const mutationKey = ['postAuthGoogle'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
       
 
@@ -82,7 +79,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postAuthGoogle>>, void> = () => {
           
 
-          return  postAuthGoogle(fetchOptions)
+          return  postAuthGoogle(requestOptions)
         }
 
 
@@ -97,7 +94,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
     export type PostAuthGoogleMutationError = unknown
 
     export const usePostAuthGoogle = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogle>>, TError,void, TContext>, fetch?: RequestInit}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogle>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postAuthGoogle>>,
         TError,
@@ -140,7 +137,7 @@ export const getPostAuthGoogleCallbackUrl = () => {
 
 export const postAuthGoogleCallback = async (oAuthCallbackRequest: OAuthCallbackRequest, options?: RequestInit): Promise<postAuthGoogleCallbackResponse> => {
   
-  const res = await fetch(getPostAuthGoogleCallbackUrl(),
+  return customFetch<postAuthGoogleCallbackResponse>(getPostAuthGoogleCallbackUrl(),
   {      
     ...options,
     method: 'POST',
@@ -148,27 +145,21 @@ export const postAuthGoogleCallback = async (oAuthCallbackRequest: OAuthCallback
     body: JSON.stringify(
       oAuthCallbackRequest,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: postAuthGoogleCallbackResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as postAuthGoogleCallbackResponse
-}
+);}
   
 
 
 
 export const getPostAuthGoogleCallbackMutationOptions = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogleCallback>>, TError,{data: OAuthCallbackRequest}, TContext>, fetch?: RequestInit}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogleCallback>>, TError,{data: OAuthCallbackRequest}, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogleCallback>>, TError,{data: OAuthCallbackRequest}, TContext> => {
 
 const mutationKey = ['postAuthGoogleCallback'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
       
 
@@ -176,7 +167,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postAuthGoogleCallback>>, {data: OAuthCallbackRequest}> = (props) => {
           const {data} = props ?? {};
 
-          return  postAuthGoogleCallback(data,fetchOptions)
+          return  postAuthGoogleCallback(data,requestOptions)
         }
 
 
@@ -191,7 +182,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
     export type PostAuthGoogleCallbackMutationError = void
 
     export const usePostAuthGoogleCallback = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogleCallback>>, TError,{data: OAuthCallbackRequest}, TContext>, fetch?: RequestInit}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogleCallback>>, TError,{data: OAuthCallbackRequest}, TContext>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postAuthGoogleCallback>>,
         TError,

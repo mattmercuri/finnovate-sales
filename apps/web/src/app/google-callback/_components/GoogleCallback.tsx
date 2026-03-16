@@ -1,35 +1,42 @@
 'use client'
 
-import { usePostAuthGoogleCallback } from "@/api/authentication/authentication"
-import { useLayoutEffect } from "react"
+import { usePostAuthGoogleCallback } from '@/api/authentication/authentication'
+import { useEffect, useRef } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function GoogleCallbackHandler() {
-  const mutate = usePostAuthGoogleCallback({
-    mutation: {
-      onSuccess: () => {
-        window.location.href = window.location.origin + '/dashboard'
-      }
-    }
-  })
+  const { mutateAsync, isPending } = usePostAuthGoogleCallback()
+  const hasRun = useRef(false)
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
-  useLayoutEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search)
-    const code = urlParams.get('code')
-    const state = urlParams.get('state')
+  useEffect(() => {
+    if (hasRun.current) return
 
-    if (code && state) {
-      mutate.mutate({
-        data: {
-          code,
-          state
-        }
-      })
-    } else {
+    const code = searchParams.get('code')
+    const state = searchParams.get('state')
+
+    if (!code || !state) {
       console.error('Missing code or state in Google callback URL')
+      return
     }
-  }, [mutate])
 
-  return (
-    <></>
-  )
+    hasRun.current = true
+
+    void mutateAsync({
+      data: {
+        code,
+        state,
+      },
+    })
+      .then(() => {
+        router.replace('/dashboard')
+      })
+      .catch((error) => {
+        hasRun.current = false
+        console.error('Google callback failed', error)
+      })
+  }, [mutateAsync, router, searchParams])
+
+  return isPending ? <div>Signing you in...</div> : null
 }

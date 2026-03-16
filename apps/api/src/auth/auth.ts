@@ -34,7 +34,6 @@ auth.openapi(requestOAuthRoute, async (c) => {
     httpOnly: true,
     secure: !c.var.environmentConfig.IS_DEV,
     sameSite: 'strict',
-    path: '/auth/google/callback',
     maxAge: 60 * 5
   })
 
@@ -78,6 +77,7 @@ const callbackRoute = createRoute({
 auth.openapi(callbackRoute, async (c) => {
   const { code, state } = await c.req.json();
   const stateFromCookie = getCookie(c, 'google_oauth_state');
+  console.log('Received Google OAuth callback with code:', code, 'and state:', state, 'State from cookie:', stateFromCookie)
 
   if (!code || !state || !stateFromCookie) {
     return c.json({ error: 'Missing code or state' }, 400)
