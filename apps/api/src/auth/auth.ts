@@ -165,6 +165,7 @@ auth.openapi(callbackRoute, async (c) => {
    * TODO:
    * - Wrap endpoint in error handling
    * - Add logging
+   * - Add validation and typed responses
    */
 })
 
