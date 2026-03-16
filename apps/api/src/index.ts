@@ -1,5 +1,6 @@
 import { serve } from '@hono/node-server'
 import { OpenAPIHono } from '@hono/zod-openapi';
+import { jwt } from 'hono/jwt';
 import { swaggerUI } from '@hono/swagger-ui';
 import auth from './auth/auth'
 import db from './db'
@@ -14,6 +15,19 @@ app.use("*", async (c, next) => {
   c.set("environmentConfig", environmentConfig);
   await next();
 });
+
+app.use('/user/*', (c, next) => {
+  const jwtMiddleware = jwt({
+    secret: c.var.environmentConfig.JWT_SECRET,
+    alg: 'HS256',
+    cookie: 'access_token',
+    verification: {
+      iss: 'finnovate-sales',
+      aud: 'finnovate-users'
+    }
+  })
+  return jwtMiddleware(c, next)
+})
 
 app.route('/auth', auth)
 
