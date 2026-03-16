@@ -7,6 +7,7 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
+    "api:generate": "pnpm --filter @finnovate-sales/web run api:generate",
     "db:generate": "pnpm --filter @finnovate-sales/db exec prisma generate",
     "db:migrate": "pnpm --filter @finnovate-sales/db exec prisma migrate dev",
     "db:push": "pnpm --filter @finnovate-sales/db exec prisma db push",
