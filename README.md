@@ -8,6 +8,15 @@ This project uses a local PostgreSQL DB that is managed through `docker compose`
 ### Environment Variables
 Each monorepo package has its own `.env.example` in it that should demonstrate what environment variables should be set.
 
+### Prisma
+This project uses Prisma.
+
+### Orval
+This project uses Orval to automatically generate the React-Query hooks (and ensure type safety).
+
 ## TODO List
-- Added `zod-openai` to automatically create OpenAI specifications for the REST API
-- Added `eslint` and configuration to all packages and apps (add global `turborepo` command)
+- Add `eslint` and configuration to all packages and apps (add global `turborepo` command)
+- Ensure that when building the Next app, we first generate the API client and perform typechecks
+- Add instructions for Orval and Prisma
+- Ask Stephen about route guarding
+- Ask Stephen about custom fetch client
