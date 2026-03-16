@@ -1,6 +1,7 @@
 import { serve } from '@hono/node-server'
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { jwt } from 'hono/jwt';
+import { cors } from 'hono/cors';
 import { swaggerUI } from '@hono/swagger-ui';
 import auth from './auth/auth'
 import db from './db'
@@ -9,6 +10,10 @@ import type { Variables } from './types';
 
 
 const app = new OpenAPIHono<{ Variables: Variables }>()
+
+app.use("*", cors({
+  origin: ["http://localhost:3000"],
+}))
 
 app.use("*", async (c, next) => {
   c.set("db", db);

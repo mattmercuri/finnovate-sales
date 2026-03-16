@@ -1,21 +1,13 @@
+'use client'
+
+import { usePostAuthGoogle } from "@/api/authentication/authentication"
+
 export default function GoogleLoginButton() {
+  const mutate = usePostAuthGoogle()
+
   return (
-    <>
-      <div id="g_id_onload"
-        data-client_id="xxxxx"
-        data-context="signin"
-        data-ux_mode="redirect"
-        data-login_uri="xxxx"
-        data-auto_prompt="false">
-      </div>
-      <div className="g_id_signin"
-        data-type="standard"
-        data-shape="rectangular"
-        data-theme="outline"
-        data-text="signin_with"
-        data-size="large"
-        data-logo_alignment="left">
-      </div>
-    </>
+    <button onClick={() => mutate.mutate()} disabled={mutate.isPending}>
+      Sign in with Google
+    </button>
   )
 }
