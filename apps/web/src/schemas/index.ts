@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
+export * from './getApiAuthMe200';
 export * from './oAuthCallbackRequest';
 export * from './oAuthCallbackResponse';
 export * from './oAuthCallbackResponseUser';

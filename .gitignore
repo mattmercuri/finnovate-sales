@@ -39,3 +39,4 @@ yarn-error.log*
 
 # TS
 next-env.d.ts
+*.tsbuildinfo

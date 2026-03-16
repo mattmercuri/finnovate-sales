@@ -24,7 +24,13 @@ app.use("*", async (c, next) => {
   await next();
 });
 
-app.use('/user/*', (c, next) => {
+app.use('/api/*', (c, next) => {
+  const path = c.req.path
+
+  if (['/google', '/google/callback'].includes(path)) {
+    return next()
+  }
+
   const jwtMiddleware = jwt({
     secret: c.var.environmentConfig.JWT_SECRET,
     alg: 'HS256',
@@ -37,7 +43,7 @@ app.use('/user/*', (c, next) => {
   return jwtMiddleware(c, next)
 })
 
-app.route('/auth', auth)
+app.route('/api/auth', auth)
 
 app.doc('/doc', {
   openapi: '3.0.0',

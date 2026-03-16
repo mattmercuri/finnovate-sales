@@ -2,7 +2,7 @@ import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 import crypto from 'node:crypto'
 import { getGoogleOAuthClient, getRedirectUrl, signOAuthState, verifyOAuthState, signJWTToken, authConfig } from './auth.services.js'
-import { CallbackSchema, OAuthRequestSchema, RequestGoogleOAuthSchema } from './auth.schema'
+import { CallbackSchema, OAuthRequestSchema, RequestGoogleOAuthSchema, UserSchema } from './auth.schema'
 import type { Variables } from '../types'
 
 const auth = new OpenAPIHono<{ Variables: Variables }>()
@@ -174,6 +174,43 @@ auth.openapi(callbackRoute, async (c) => {
    * - Add logging
    * - Add validation and typed responses
    */
+})
+
+const profileRoute = createRoute({
+  tags: ['Authentication'],
+  method: 'get',
+  path: '/me',
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: UserSchema
+        }
+      },
+      description: 'Get current user profile'
+    },
+    404: {
+      description: 'User not found'
+    }
+  }
+})
+
+auth.openapi(profileRoute, async (c) => {
+  const userId = c.var.jwtPayload.sub
+  const user = await c.var.db.user.findUnique({
+    where: { id: parseInt(userId) }
+  })
+
+  if (!user) {
+    return c.json({ error: 'User not found' }, 404)
+  }
+
+  return c.json({
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    profilePicture: user.profileImageUrl
+  })
 })
 
 export default auth

@@ -1,9 +1,9 @@
 'use client'
 
-import { usePostAuthGoogle } from "@/api/authentication/authentication"
+import { usePostApiAuthGoogle } from "@/api/authentication/authentication"
 
 export default function GoogleLoginButton() {
-  const mutate = usePostAuthGoogle({
+  const mutate = usePostApiAuthGoogle({
     mutation: {
       onSuccess: (data) => {
         window.location.href = data.data.redirectTo

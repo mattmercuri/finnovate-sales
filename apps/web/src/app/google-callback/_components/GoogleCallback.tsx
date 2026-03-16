@@ -1,11 +1,11 @@
 'use client'
 
-import { usePostAuthGoogleCallback } from '@/api/authentication/authentication'
 import { useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { usePostApiAuthGoogleCallback } from '@/api/authentication/authentication'
 
 export default function GoogleCallbackHandler() {
-  const { mutateAsync, isPending } = usePostAuthGoogleCallback()
+  const { mutateAsync, isPending } = usePostApiAuthGoogleCallback()
   const hasRun = useRef(false)
   const router = useRouter()
   const searchParams = useSearchParams()

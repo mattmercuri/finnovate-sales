@@ -6,16 +6,26 @@
  * OpenAPI spec version: 1.0.0
  */
 import {
-  useMutation
+  useMutation,
+  useQuery
 } from '@tanstack/react-query';
 import type {
+  DataTag,
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
   MutationFunction,
   QueryClient,
+  QueryFunction,
+  QueryKey,
+  UndefinedInitialDataOptions,
   UseMutationOptions,
-  UseMutationResult
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult
 } from '@tanstack/react-query';
 
 import type {
+  GetApiAuthMe200,
   OAuthCallbackRequest,
   OAuthCallbackResponse,
   RequestGoogleOAuthResponse
@@ -28,29 +38,29 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
-export type postAuthGoogleResponse200 = {
+export type postApiAuthGoogleResponse200 = {
   data: RequestGoogleOAuthResponse
   status: 200
 }
 
-export type postAuthGoogleResponseSuccess = (postAuthGoogleResponse200) & {
+export type postApiAuthGoogleResponseSuccess = (postApiAuthGoogleResponse200) & {
   headers: Headers;
 };
 ;
 
-export type postAuthGoogleResponse = (postAuthGoogleResponseSuccess)
+export type postApiAuthGoogleResponse = (postApiAuthGoogleResponseSuccess)
 
-export const getPostAuthGoogleUrl = () => {
+export const getPostApiAuthGoogleUrl = () => {
 
 
   
 
-  return `http://localhost:3001/auth/google`
+  return `http://localhost:3001/api/auth/google`
 }
 
-export const postAuthGoogle = async ( options?: RequestInit): Promise<postAuthGoogleResponse> => {
+export const postApiAuthGoogle = async ( options?: RequestInit): Promise<postApiAuthGoogleResponse> => {
   
-  return customFetch<postAuthGoogleResponse>(getPostAuthGoogleUrl(),
+  return customFetch<postApiAuthGoogleResponse>(getPostApiAuthGoogleUrl(),
   {      
     ...options,
     method: 'POST'
@@ -62,11 +72,11 @@ export const postAuthGoogle = async ( options?: RequestInit): Promise<postAuthGo
 
 
 
-export const getPostAuthGoogleMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogle>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogle>>, TError,void, TContext> => {
+export const getPostApiAuthGoogleMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthGoogle>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthGoogle>>, TError,void, TContext> => {
 
-const mutationKey = ['postAuthGoogle'];
+const mutationKey = ['postApiAuthGoogle'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -76,10 +86,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postAuthGoogle>>, void> = () => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAuthGoogle>>, void> = () => {
           
 
-          return  postAuthGoogle(requestOptions)
+          return  postApiAuthGoogle(requestOptions)
         }
 
 
@@ -89,55 +99,55 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PostAuthGoogleMutationResult = NonNullable<Awaited<ReturnType<typeof postAuthGoogle>>>
+    export type PostApiAuthGoogleMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthGoogle>>>
     
-    export type PostAuthGoogleMutationError = unknown
+    export type PostApiAuthGoogleMutationError = unknown
 
-    export const usePostAuthGoogle = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogle>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+    export const usePostApiAuthGoogle = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthGoogle>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof postAuthGoogle>>,
+        Awaited<ReturnType<typeof postApiAuthGoogle>>,
         TError,
         void,
         TContext
       > => {
-      return useMutation(getPostAuthGoogleMutationOptions(options), queryClient);
+      return useMutation(getPostApiAuthGoogleMutationOptions(options), queryClient);
     }
-    export type postAuthGoogleCallbackResponse200 = {
+    export type postApiAuthGoogleCallbackResponse200 = {
   data: OAuthCallbackResponse
   status: 200
 }
 
-export type postAuthGoogleCallbackResponse400 = {
+export type postApiAuthGoogleCallbackResponse400 = {
   data: void
   status: 400
 }
 
-export type postAuthGoogleCallbackResponse500 = {
+export type postApiAuthGoogleCallbackResponse500 = {
   data: void
   status: 500
 }
 
-export type postAuthGoogleCallbackResponseSuccess = (postAuthGoogleCallbackResponse200) & {
+export type postApiAuthGoogleCallbackResponseSuccess = (postApiAuthGoogleCallbackResponse200) & {
   headers: Headers;
 };
-export type postAuthGoogleCallbackResponseError = (postAuthGoogleCallbackResponse400 | postAuthGoogleCallbackResponse500) & {
+export type postApiAuthGoogleCallbackResponseError = (postApiAuthGoogleCallbackResponse400 | postApiAuthGoogleCallbackResponse500) & {
   headers: Headers;
 };
 
-export type postAuthGoogleCallbackResponse = (postAuthGoogleCallbackResponseSuccess | postAuthGoogleCallbackResponseError)
+export type postApiAuthGoogleCallbackResponse = (postApiAuthGoogleCallbackResponseSuccess | postApiAuthGoogleCallbackResponseError)
 
-export const getPostAuthGoogleCallbackUrl = () => {
+export const getPostApiAuthGoogleCallbackUrl = () => {
 
 
   
 
-  return `http://localhost:3001/auth/google/callback`
+  return `http://localhost:3001/api/auth/google/callback`
 }
 
-export const postAuthGoogleCallback = async (oAuthCallbackRequest: OAuthCallbackRequest, options?: RequestInit): Promise<postAuthGoogleCallbackResponse> => {
+export const postApiAuthGoogleCallback = async (oAuthCallbackRequest: OAuthCallbackRequest, options?: RequestInit): Promise<postApiAuthGoogleCallbackResponse> => {
   
-  return customFetch<postAuthGoogleCallbackResponse>(getPostAuthGoogleCallbackUrl(),
+  return customFetch<postApiAuthGoogleCallbackResponse>(getPostApiAuthGoogleCallbackUrl(),
   {      
     ...options,
     method: 'POST',
@@ -150,11 +160,11 @@ export const postAuthGoogleCallback = async (oAuthCallbackRequest: OAuthCallback
 
 
 
-export const getPostAuthGoogleCallbackMutationOptions = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogleCallback>>, TError,{data: OAuthCallbackRequest}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogleCallback>>, TError,{data: OAuthCallbackRequest}, TContext> => {
+export const getPostApiAuthGoogleCallbackMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthGoogleCallback>>, TError,{data: OAuthCallbackRequest}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthGoogleCallback>>, TError,{data: OAuthCallbackRequest}, TContext> => {
 
-const mutationKey = ['postAuthGoogleCallback'];
+const mutationKey = ['postApiAuthGoogleCallback'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -164,10 +174,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postAuthGoogleCallback>>, {data: OAuthCallbackRequest}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAuthGoogleCallback>>, {data: OAuthCallbackRequest}> = (props) => {
           const {data} = props ?? {};
 
-          return  postAuthGoogleCallback(data,requestOptions)
+          return  postApiAuthGoogleCallback(data,requestOptions)
         }
 
 
@@ -177,18 +187,128 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PostAuthGoogleCallbackMutationResult = NonNullable<Awaited<ReturnType<typeof postAuthGoogleCallback>>>
-    export type PostAuthGoogleCallbackMutationBody = OAuthCallbackRequest
-    export type PostAuthGoogleCallbackMutationError = void
+    export type PostApiAuthGoogleCallbackMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthGoogleCallback>>>
+    export type PostApiAuthGoogleCallbackMutationBody = OAuthCallbackRequest
+    export type PostApiAuthGoogleCallbackMutationError = void
 
-    export const usePostAuthGoogleCallback = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuthGoogleCallback>>, TError,{data: OAuthCallbackRequest}, TContext>, request?: SecondParameter<typeof customFetch>}
+    export const usePostApiAuthGoogleCallback = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthGoogleCallback>>, TError,{data: OAuthCallbackRequest}, TContext>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof postAuthGoogleCallback>>,
+        Awaited<ReturnType<typeof postApiAuthGoogleCallback>>,
         TError,
         {data: OAuthCallbackRequest},
         TContext
       > => {
-      return useMutation(getPostAuthGoogleCallbackMutationOptions(options), queryClient);
+      return useMutation(getPostApiAuthGoogleCallbackMutationOptions(options), queryClient);
     }
+    export type getApiAuthMeResponse200 = {
+  data: GetApiAuthMe200
+  status: 200
+}
+
+export type getApiAuthMeResponse404 = {
+  data: void
+  status: 404
+}
+
+export type getApiAuthMeResponseSuccess = (getApiAuthMeResponse200) & {
+  headers: Headers;
+};
+export type getApiAuthMeResponseError = (getApiAuthMeResponse404) & {
+  headers: Headers;
+};
+
+export type getApiAuthMeResponse = (getApiAuthMeResponseSuccess | getApiAuthMeResponseError)
+
+export const getGetApiAuthMeUrl = () => {
+
+
+  
+
+  return `http://localhost:3001/api/auth/me`
+}
+
+export const getApiAuthMe = async ( options?: RequestInit): Promise<getApiAuthMeResponse> => {
+  
+  return customFetch<getApiAuthMeResponse>(getGetApiAuthMeUrl(),
+  {      
+    ...options,
+    method: 'GET'
     
+    
+  }
+);}
+  
+
+
+
+
+export const getGetApiAuthMeQueryKey = () => {
+    return [
+    `http://localhost:3001/api/auth/me`
+    ] as const;
+    }
+
+    
+export const getGetApiAuthMeQueryOptions = <TData = Awaited<ReturnType<typeof getApiAuthMe>>, TError = void>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthMe>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiAuthMeQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiAuthMe>>> = ({ signal }) => getApiAuthMe({ signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiAuthMe>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiAuthMeQueryResult = NonNullable<Awaited<ReturnType<typeof getApiAuthMe>>>
+export type GetApiAuthMeQueryError = void
+
+
+export function useGetApiAuthMe<TData = Awaited<ReturnType<typeof getApiAuthMe>>, TError = void>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthMe>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiAuthMe>>,
+          TError,
+          Awaited<ReturnType<typeof getApiAuthMe>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiAuthMe<TData = Awaited<ReturnType<typeof getApiAuthMe>>, TError = void>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthMe>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiAuthMe>>,
+          TError,
+          Awaited<ReturnType<typeof getApiAuthMe>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiAuthMe<TData = Awaited<ReturnType<typeof getApiAuthMe>>, TError = void>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthMe>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetApiAuthMe<TData = Awaited<ReturnType<typeof getApiAuthMe>>, TError = void>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthMe>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiAuthMeQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
