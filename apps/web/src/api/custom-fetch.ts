@@ -1,3 +1,4 @@
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 export const AUTH_EXPIRED_EVENT = "auth:expired";
 
 type ApiErrorCode = "HTTP_ERROR" | "AUTH_REFRESH_FAILED" | "NETWORK_ERROR";
@@ -144,31 +145,32 @@ async function executeRequest<T>(
   options?: RequestInit,
   canRefresh = true,
 ): Promise<T> {
+  const fullUrl = requestUrl.startsWith("http") ? requestUrl : `${API_BASE_URL}${requestUrl}`;
   const method = getMethod(options);
 
   let response: Response;
   try {
-    response = await fetch(requestUrl, {
+    response = await fetch(fullUrl, {
       ...options,
       credentials: "include",
     });
   } catch (error) {
     throw new ApiError({
       message: "Network request failed",
-      url: requestUrl,
+      url: fullUrl,
       method,
       data: error,
       code: "NETWORK_ERROR",
     });
   }
 
-  if (response.status === 401 && canRefresh && !isRefreshEndpoint(requestUrl)) {
-    await refreshSession(requestUrl);
-    return executeRequest<T>(requestUrl, options, false);
+  if (response.status === 401 && canRefresh && !isRefreshEndpoint(fullUrl)) {
+    await refreshSession(fullUrl);
+    return executeRequest<T>(fullUrl, options, false);
   }
 
   if (!response.ok) {
-    throw await buildHttpError(response, requestUrl, method);
+    throw await buildHttpError(response, fullUrl, method);
   }
 
   const data = await parseResponseBody(response);

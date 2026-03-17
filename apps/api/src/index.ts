@@ -4,6 +4,7 @@ import { jwt } from 'hono/jwt';
 import { cors } from 'hono/cors';
 import { csrf } from 'hono/csrf';
 import { logger } from 'hono/logger';
+import { secureHeaders } from 'hono/secure-headers';
 import { swaggerUI } from '@hono/swagger-ui';
 import auth from './auth/auth'
 import db from './db'
@@ -25,6 +26,15 @@ app.use("*", cors({ origin: environmentConfig.FRONTEND_URL, credentials: true })
 
 app.use("*", csrf({
   origin: environmentConfig.FRONTEND_URL,
+}))
+
+app.use('*', secureHeaders({
+  strictTransportSecurity: environmentConfig.IS_DEV
+    ? false
+    : 'max-age=31536000; includeSubDomains; preload',
+  xFrameOptions: 'DENY',
+  xContentTypeOptions: 'nosniff',
+  referrerPolicy: 'strict-origin-when-cross-origin',
 }))
 
 app.use('/api/*', (c, next) => {

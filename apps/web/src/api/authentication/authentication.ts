@@ -56,7 +56,7 @@ export const getPostApiAuthGoogleUrl = () => {
 
   
 
-  return `http://localhost:3001/api/auth/google`
+  return `/api/auth/google`
 }
 
 export const postApiAuthGoogle = async ( options?: RequestInit): Promise<postApiAuthGoogleResponse> => {
@@ -143,7 +143,7 @@ export const getPostApiAuthGoogleCallbackUrl = () => {
 
   
 
-  return `http://localhost:3001/api/auth/google/callback`
+  return `/api/auth/google/callback`
 }
 
 export const postApiAuthGoogleCallback = async (oAuthCallbackRequest: OAuthCallbackRequest, options?: RequestInit): Promise<postApiAuthGoogleCallbackResponse> => {
@@ -226,7 +226,7 @@ export const getGetApiAuthMeUrl = () => {
 
   
 
-  return `http://localhost:3001/api/auth/me`
+  return `/api/auth/me`
 }
 
 export const getApiAuthMe = async ( options?: RequestInit): Promise<getApiAuthMeResponse> => {
@@ -246,7 +246,7 @@ export const getApiAuthMe = async ( options?: RequestInit): Promise<getApiAuthMe
 
 export const getGetApiAuthMeQueryKey = () => {
     return [
-    `http://localhost:3001/api/auth/me`
+    `/api/auth/me`
     ] as const;
     }
 
@@ -337,7 +337,7 @@ export const getPostApiAuthRefreshUrl = () => {
 
   
 
-  return `http://localhost:3001/api/auth/refresh`
+  return `/api/auth/refresh`
 }
 
 export const postApiAuthRefresh = async ( options?: RequestInit): Promise<postApiAuthRefreshResponse> => {
@@ -412,7 +412,7 @@ export const getPostApiAuthLogoutUrl = () => {
 
   
 
-  return `http://localhost:3001/api/auth/logout`
+  return `/api/auth/logout`
 }
 
 export const postApiAuthLogout = async ( options?: RequestInit): Promise<postApiAuthLogoutResponse> => {
