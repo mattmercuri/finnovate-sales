@@ -23,4 +23,6 @@ This project uses Orval to automatically generate the React-Query hooks (and ens
 - Ask Stephen about error handling within endpoint (come up with approach)
 - Add documentation about `/docs`
 - Ask LLM about security within auth endpoints
+- Ensure that only Finnovate users can get on the platform
+- Add refresh tokens to DB and make them revokable
 - Add testing
