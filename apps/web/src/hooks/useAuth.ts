@@ -1,6 +1,11 @@
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { useGetApiAuthMe, usePostApiAuthLogout } from "@/api/authentication/authentication";
+import {
+  useGetApiAuthMe,
+  usePostApiAuthLogout,
+} from "@/api/authentication/authentication";
+import { AUTH_EXPIRED_EVENT } from "@/api/custom-fetch";
 import type { GetApiAuthMe200 } from "@/schemas";
 
 
@@ -23,11 +28,24 @@ export default function useAuth() {
   const mutation = usePostApiAuthLogout({
     mutation: {
       onSuccess: () => {
-        queryClient.invalidateQueries()
+        queryClient.clear()
         router.replace('/')
       }
     }
   })
+
+  useEffect(() => {
+    function handleAuthExpired() {
+      queryClient.clear()
+      router.replace('/')
+    }
+
+    window.addEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired)
+
+    return () => {
+      window.removeEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired)
+    }
+  }, [queryClient, router])
 
   function getStatus(query: ReturnType<typeof useGetApiAuthMe>): AuthStatus {
     if (query.isPending) {

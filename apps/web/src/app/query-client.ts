@@ -3,12 +3,20 @@ import {
   defaultShouldDehydrateQuery,
   isServer,
 } from '@tanstack/react-query'
+import { isApiError } from '@/api/custom-fetch'
 
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
         staleTime: 60 * 1000,
+        retry: (failureCount, error) => {
+          if (isApiError(error) && (error.code === 'AUTH_REFRESH_FAILED' || error.status === 401)) {
+            return false
+          }
+
+          return failureCount < 3
+        },
       },
       dehydrate: {
         // include pending queries in dehydration
