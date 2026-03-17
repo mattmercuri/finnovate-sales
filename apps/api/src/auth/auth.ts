@@ -173,13 +173,6 @@ auth.openapi(callbackRoute, async (c) => {
       profilePicture: user.profileImageUrl
     }
   })
-
-  /**
-   * TODO:
-   * - Wrap endpoint in error handling
-   * - Add logging
-   * - Add validation and typed responses
-   */
 })
 
 const profileRoute = createRoute({
@@ -256,6 +249,24 @@ auth.openapi(refreshRoutes, async (c) => {
   } catch (error) {
     return c.json({ error: 'Invalid refresh token' }, 400)
   }
+})
+
+const logoutRoute = createRoute({
+  tags: ['Authentication'],
+  method: 'post',
+  path: '/logout',
+  responses: {
+    200: {
+      description: 'Logout successful'
+    }
+  }
+})
+
+auth.openapi(logoutRoute, async (c) => {
+  deleteCookie(c, 'access_token')
+  deleteCookie(c, 'refresh_token')
+
+  return c.json({ success: true })
 })
 
 export default auth
