@@ -6,8 +6,8 @@ export default function SideBar() {
     <div className={styles.sidebar}>
       {toolCategories.map((category) => (
         <button key={`category-${category}`}>
-          <span>{category}</span>
           {categoryIcons[category]}
+          <span>{category}</span>
         </button>
       ))}
     </div>
