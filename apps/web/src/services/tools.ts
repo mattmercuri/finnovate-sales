@@ -15,7 +15,7 @@ export type Tool = {
 export const tools = [
   {
     name: 'Crunchy V2',
-    description: "Enrich crunchbase exported sheets with best point-of-contact's email and phone number.",
+    description: "Enrich crunchbase exported sheets with best point-of-contact.",
     status: 'experimental',
     category: 'Enrichment',
     href: '/dashboard/tools/crunchy-v2',
