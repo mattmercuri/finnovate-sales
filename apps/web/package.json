@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "lint:fix": "eslint --fix",
     "check-types": "tsc --noEmit",
     "api:generate": "orval"
   },
