@@ -10,9 +10,7 @@ export default function DashboardLayout({
       <header>
         <NavBar />
       </header>
-      <main>
-        {children}
-      </main>
+      {children}
     </>
   )
 }

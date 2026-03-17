@@ -6,7 +6,7 @@ type ToolStatus = 'experimental' | 'stable' | 'deprecated';
 export type Tool = {
   name: string,
   description: string,
-  tags: ToolStatus,
+  status: ToolStatus,
   category: ToolCategory,
   href: string
 }
@@ -15,7 +15,7 @@ export const tools = [
   {
     name: 'Crunchy V2',
     description: "Enrich crunchbase exported sheets with best point-of-contact's email and phone number.",
-    tags: 'experimental',
+    status: 'experimental',
     category: 'Enrichment',
     href: '/dashboard/tools/crunchy-v2'
   }
