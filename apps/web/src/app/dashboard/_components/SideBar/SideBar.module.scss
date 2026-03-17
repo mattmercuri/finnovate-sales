@@ -17,11 +17,16 @@
     padding: 0.25rem 0.5rem;
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
+    margin-bottom: 0.5rem;
 
-    span {
+    p {
       font-size: 1.25rem;
       margin-right: auto;
       color: var(--primary-text)
+    }
+
+    .count {
+      color: var(--primary-text);
     }
 
     svg {

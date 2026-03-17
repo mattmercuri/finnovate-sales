@@ -2,7 +2,7 @@ import { MailPlus } from "lucide-react";
 import { JSX } from "react";
 
 export const toolCategories = ['Enrichment'] as const;
-type ToolCategory = (typeof toolCategories)[number];
+export type ToolCategory = (typeof toolCategories)[number];
 
 type ToolStatus = 'experimental' | 'stable' | 'deprecated';
 
@@ -24,7 +24,8 @@ export const tools = [
   }
 ] as const satisfies Tool[];
 
-const defaultIconColour = '#f0f0f0'
+export const defaultIconColour = '#f0f0f0'
+export const defaultStrokeWidth = 1;
 export const categoryIcons: Record<ToolCategory, JSX.Element> = {
-  Enrichment: <MailPlus color={defaultIconColour} strokeWidth={1} />
+  Enrichment: <MailPlus color={defaultIconColour} strokeWidth={defaultStrokeWidth} />
 }
