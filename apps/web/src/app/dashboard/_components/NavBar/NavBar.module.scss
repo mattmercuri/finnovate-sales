@@ -1,9 +1,12 @@
+@use "@/app/mixins" as *;
+
 .nav {
   display: flex;
   align-items: center;
   height: 4rem;
   width: 100%;
   padding: 0 10rem;
+  @include border(bottom);
 
   .appName {
     font-size: 1.75rem;
