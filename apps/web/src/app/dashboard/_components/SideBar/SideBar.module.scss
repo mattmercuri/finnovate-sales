@@ -8,15 +8,14 @@
   min-height: calc(100vh - 4rem);
   @include border(right);
 
-  button {
+  a {
     display: flex;
     align-items: center;
-    background: none;
-    border: none;
+    text-decoration: none;
     border-radius: 0.25rem;
     padding: 0.25rem 0.5rem;
     cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
     margin-bottom: 0.5rem;
 
     p {
@@ -35,6 +34,32 @@
 
     &:hover {
       background-color: var(--hover-accent);
+    }
+  }
+
+  .active {
+    background-color: var(--hover-accent);
+
+    p {
+      color: var(--primary-accent);
+    }
+
+    span {
+      color: var(--primary-accent);
+    }
+
+    svg {
+      color: var(--primary-accent);
+
+      path,
+      line,
+      polyline,
+      polygon,
+      rect,
+      circle,
+      ellipse {
+        stroke: var(--primary-accent);
+      }
     }
   }
 }
