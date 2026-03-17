@@ -1,5 +1,3 @@
-'use client'
-
 import { useGetApiAuthMe } from "@/api/authentication/authentication";
 import type { GetApiAuthMe200 } from "@/schemas";
 

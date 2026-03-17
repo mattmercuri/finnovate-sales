@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ProfileSection from "./ProfileSection";
 import styles from "./NavBar.module.scss";
 
 export default function NavBar() {
@@ -9,7 +10,8 @@ export default function NavBar() {
         <Image src='/logo-white.svg' alt='finnovate logo in navigation bar' fill />
       </Link>
       <span>|</span>
-      <p>Sales</p>
+      <p className={styles.appName}>Sales</p>
+      <ProfileSection />
     </nav>
   )
 }

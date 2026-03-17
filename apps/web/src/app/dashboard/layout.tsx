@@ -1,4 +1,3 @@
-import DashboardAuthGate from "./_components/DashboardAuthGate";
 import NavBar from "./_components/NavBar";
 
 export default function DashboardLayout({
@@ -12,7 +11,7 @@ export default function DashboardLayout({
         <NavBar />
       </header>
       <main>
-        <DashboardAuthGate>{children}</DashboardAuthGate>
+        {children}
       </main>
     </>
   )
