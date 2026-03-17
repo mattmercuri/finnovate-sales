@@ -10,6 +10,7 @@ const EnvSchema = z.strictObject({
   GOOGLE_REDIRECT_URI: z.string().min(1),
   JWT_SECRET: z.string().min(1),
   IS_DEV: z.boolean().default(false),
+  FRONTEND_URL: z.string().min(1).default('http://localhost:3000'),
 });
 
 export const environmentConfig = EnvSchema.parse({
@@ -19,6 +20,7 @@ export const environmentConfig = EnvSchema.parse({
   GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI,
   JWT_SECRET: process.env.JWT_SECRET,
   IS_DEV: process.env.NODE_ENV !== 'production',
+  FRONTEND_URL: process.env.FRONTEND_URL,
 });
 
 export type EnvironmentConfig = z.infer<typeof EnvSchema>;

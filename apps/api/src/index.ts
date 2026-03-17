@@ -2,6 +2,7 @@ import { serve } from '@hono/node-server'
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { jwt } from 'hono/jwt';
 import { cors } from 'hono/cors';
+import { csrf } from 'hono/csrf';
 import { logger } from 'hono/logger';
 import { swaggerUI } from '@hono/swagger-ui';
 import auth from './auth/auth'
@@ -11,18 +12,20 @@ import type { Variables } from './types';
 
 const app = new OpenAPIHono<{ Variables: Variables }>()
 
-app.use("*", cors({
-  origin: ["http://localhost:3000"],
-  credentials: true
-}))
-
-app.use("*", logger())
 
 app.use("*", async (c, next) => {
   c.set("db", db);
   c.set("environmentConfig", environmentConfig);
   await next();
 });
+
+app.use("*", logger())
+
+app.use("*", cors({ origin: environmentConfig.FRONTEND_URL, credentials: true }))
+
+app.use("*", csrf({
+  origin: environmentConfig.FRONTEND_URL,
+}))
 
 app.use('/api/*', (c, next) => {
   const path = c.req.path
