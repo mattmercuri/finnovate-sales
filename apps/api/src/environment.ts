@@ -8,7 +8,7 @@ const EnvSchema = z.strictObject({
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),
   GOOGLE_REDIRECT_URI: z.string().min(1),
-  JWT_SECRET: z.string().min(1),
+  JWT_SECRET: z.string().min(32),
   IS_DEV: z.boolean().default(false),
   FRONTEND_URL: z.string().min(1).default('http://localhost:3000'),
 });

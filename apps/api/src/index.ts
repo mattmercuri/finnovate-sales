@@ -58,15 +58,17 @@ app.use('/api/*', (c, next) => {
 
 app.route('/api/auth', auth)
 
-app.doc('/doc', {
-  openapi: '3.0.0',
-  info: {
-    version: '1.0.0',
-    title: 'Finnovate Sales API',
-    description: 'API documentation for Finnovate Sales',
-  }
-})
-app.get('/docs', swaggerUI({ url: '/doc' }))
+if (environmentConfig.IS_DEV) {
+  app.doc('/doc', {
+    openapi: '3.0.0',
+    info: {
+      version: '1.0.0',
+      title: 'Finnovate Sales API',
+      description: 'API documentation for Finnovate Sales',
+    }
+  })
+  app.get('/docs', swaggerUI({ url: '/doc' }))
+}
 
 serve({
   fetch: app.fetch,
