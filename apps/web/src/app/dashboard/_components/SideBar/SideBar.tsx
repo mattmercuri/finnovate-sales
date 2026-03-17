@@ -1,8 +1,15 @@
-import { categoryIcons, defaultIconColour, defaultStrokeWidth, toolCategories, type ToolCategory } from "@/services/tools";
-import { Grip } from "lucide-react";
+import { toolCategories, type ToolCategory } from "@/services/tools";
+import { Grip, MailPlus } from "lucide-react";
 import styles from "./SideBar.module.scss";
+import { type JSX } from "react";
 
 export default function SideBar() {
+  const defaultIconColour = '#f0f0f0'
+  const defaultStrokeWidth = 1;
+  const categoryIcons: Record<ToolCategory, JSX.Element> = {
+    Enrichment: <MailPlus color={defaultIconColour} strokeWidth={defaultStrokeWidth} />
+  }
+
   const totaCount = toolCategories.length;
 
   function getCategoryCount(category: ToolCategory) {

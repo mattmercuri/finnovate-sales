@@ -1,6 +1,3 @@
-import { MailPlus } from "lucide-react";
-import { JSX } from "react";
-
 export const toolCategories = ['Enrichment'] as const;
 export type ToolCategory = (typeof toolCategories)[number];
 
@@ -23,9 +20,3 @@ export const tools = [
     href: '/dashboard/tools/crunchy-v2'
   }
 ] as const satisfies Tool[];
-
-export const defaultIconColour = '#f0f0f0'
-export const defaultStrokeWidth = 1;
-export const categoryIcons: Record<ToolCategory, JSX.Element> = {
-  Enrichment: <MailPlus color={defaultIconColour} strokeWidth={defaultStrokeWidth} />
-}
