@@ -1,24 +1,24 @@
-'use client'
+'use client';
 
-import { useEffect, useRef, useState } from "react"
-import { useRouter } from "next/navigation"
-import Image from "next/image"
-import useAuth from "@/hooks/useAuth"
-import styles from "./ProfileSection.module.scss"
-import ProfileDropdown from "./ProfileDropdown"
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import useAuth from '@/hooks/useAuth';
+import styles from './ProfileSection.module.scss';
+import ProfileDropdown from './ProfileDropdown';
 
 
 export default function ProfileSection() {
-  const { status, user, logout } = useAuth()
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const router = useRouter()
+  const { status, user, logout } = useAuth();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    if (status === "error" || (status === "authenticated" && !user)) {
-      router.replace('/')
+    if (status === 'error' || (status === 'authenticated' && !user)) {
+      router.replace('/');
     }
-  }, [status, user, router])
+  }, [status, user, router]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -26,24 +26,24 @@ export default function ProfileSection() {
         containerRef.current &&
         !containerRef.current.contains(event.target as Node)
       ) {
-        setIsDropdownOpen(false)
+        setIsDropdownOpen(false);
       }
     }
 
     function handleEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setIsDropdownOpen(false)
+      if (event.key === 'Escape') {
+        setIsDropdownOpen(false);
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside)
-    document.addEventListener("keydown", handleEscape)
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-      document.removeEventListener("keydown", handleEscape)
-    }
-  }, [])
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, []);
 
   return (
     <div className={styles.profile}>
@@ -64,5 +64,5 @@ export default function ProfileSection() {
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
-export const AUTH_EXPIRED_EVENT = "auth:expired";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
+export const AUTH_EXPIRED_EVENT = 'auth:expired';
 
-type ApiErrorCode = "HTTP_ERROR" | "AUTH_REFRESH_FAILED" | "NETWORK_ERROR";
+type ApiErrorCode = 'HTTP_ERROR' | 'AUTH_REFRESH_FAILED' | 'NETWORK_ERROR';
 
 export class ApiError extends Error {
   status?: number;
@@ -26,7 +26,7 @@ export class ApiError extends Error {
     code: ApiErrorCode;
   }) {
     super(message);
-    this.name = "ApiError";
+    this.name = 'ApiError';
     this.status = status;
     this.url = url;
     this.method = method;
@@ -42,7 +42,7 @@ export function isApiError(error: unknown): error is ApiError {
 let refreshInFlight: Promise<void> | null = null;
 
 function getMethod(options?: RequestInit): string {
-  return options?.method?.toUpperCase() ?? "GET";
+  return options?.method?.toUpperCase() ?? 'GET';
 }
 
 function getRefreshUrl(requestUrl: string): string {
@@ -50,24 +50,24 @@ function getRefreshUrl(requestUrl: string): string {
     const url = new URL(requestUrl);
     return `${url.origin}/api/auth/refresh`;
   } catch {
-    if (typeof window !== "undefined") {
-      return new URL("/api/auth/refresh", window.location.origin).toString();
+    if (typeof window !== 'undefined') {
+      return new URL('/api/auth/refresh', window.location.origin).toString();
     }
 
-    return "/api/auth/refresh";
+    return '/api/auth/refresh';
   }
 }
 
 function isRefreshEndpoint(requestUrl: string): boolean {
   try {
-    return new URL(requestUrl).pathname === "/api/auth/refresh";
+    return new URL(requestUrl).pathname === '/api/auth/refresh';
   } catch {
-    return requestUrl.endsWith("/api/auth/refresh");
+    return requestUrl.endsWith('/api/auth/refresh');
   }
 }
 
 function notifyAuthExpired() {
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     return;
   }
 
@@ -75,8 +75,8 @@ function notifyAuthExpired() {
 }
 
 async function parseResponseBody(response: Response): Promise<unknown> {
-  const contentType = response.headers.get("content-type") ?? "";
-  if (contentType.includes("application/json")) {
+  const contentType = response.headers.get('content-type') ?? '';
+  if (contentType.includes('application/json')) {
     return response.json();
   }
 
@@ -92,7 +92,7 @@ async function buildHttpError(response: Response, requestUrl: string, method: st
     method,
     status: response.status,
     data,
-    code: "HTTP_ERROR",
+    code: 'HTTP_ERROR',
   });
 }
 
@@ -102,34 +102,34 @@ async function refreshSession(requestUrl: string): Promise<void> {
     refreshInFlight = (async () => {
       try {
         const response = await fetch(refreshUrl, {
-          method: "POST",
-          credentials: "include",
+          method: 'POST',
+          credentials: 'include',
         });
 
         if (!response.ok) {
-          throw await buildHttpError(response, refreshUrl, "POST");
+          throw await buildHttpError(response, refreshUrl, 'POST');
         }
       } catch (error) {
         notifyAuthExpired();
 
         if (isApiError(error)) {
           throw new ApiError({
-            message: "Refresh token exchange failed",
+            message: 'Refresh token exchange failed',
             url: error.url,
             method: error.method,
             status: 401,
             data: error.data,
-            code: "AUTH_REFRESH_FAILED",
+            code: 'AUTH_REFRESH_FAILED',
           });
         }
 
         throw new ApiError({
-          message: "Refresh token exchange failed",
+          message: 'Refresh token exchange failed',
           url: refreshUrl,
-          method: "POST",
+          method: 'POST',
           status: 401,
           data: error,
-          code: "AUTH_REFRESH_FAILED",
+          code: 'AUTH_REFRESH_FAILED',
         });
       } finally {
         refreshInFlight = null;
@@ -145,22 +145,22 @@ async function executeRequest<T>(
   options?: RequestInit,
   canRefresh = true,
 ): Promise<T> {
-  const fullUrl = requestUrl.startsWith("http") ? requestUrl : `${API_BASE_URL}${requestUrl}`;
+  const fullUrl = requestUrl.startsWith('http') ? requestUrl : `${API_BASE_URL}${requestUrl}`;
   const method = getMethod(options);
 
   let response: Response;
   try {
     response = await fetch(fullUrl, {
       ...options,
-      credentials: "include",
+      credentials: 'include',
     });
   } catch (error) {
     throw new ApiError({
-      message: "Network request failed",
+      message: 'Network request failed',
       url: fullUrl,
       method,
       data: error,
-      code: "NETWORK_ERROR",
+      code: 'NETWORK_ERROR',
     });
   }
 

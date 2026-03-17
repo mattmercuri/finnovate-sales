@@ -1,5 +1,5 @@
-import SideBar from "./_components/SideBar";
-import ToolCards from "./_components/ToolCards";
+import SideBar from './_components/SideBar';
+import ToolCards from './_components/ToolCards';
 import styles from './page.module.scss';
 
 export default function DashboardPage() {
@@ -8,5 +8,5 @@ export default function DashboardPage() {
       <SideBar />
       <ToolCards />
     </main>
-  )
+  );
 }

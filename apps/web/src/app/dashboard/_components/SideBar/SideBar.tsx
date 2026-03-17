@@ -1,25 +1,25 @@
-'use client'
+'use client';
 
-import { useCallback, type JSX } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { Grip, MailPlus } from "lucide-react";
-import { toolCategories, type ToolCategory } from "@/services/tools";
-import styles from "./SideBar.module.scss";
+import { useCallback, type JSX } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { Grip, MailPlus } from 'lucide-react';
+import { toolCategories, type ToolCategory } from '@/services/tools';
+import styles from './SideBar.module.scss';
 
 
 type ToolCategoryParams = ToolCategory | 'all';
 
 export default function SideBar() {
-  const searchParams = useSearchParams()
-  const pathname = usePathname()
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
   const toolParam = searchParams.get('tool') as ToolCategoryParams | undefined;
 
-  const defaultIconColour = '#f0f0f0'
+  const defaultIconColour = '#f0f0f0';
   const defaultStrokeWidth = 1;
   const categoryIcons: Record<ToolCategory, JSX.Element> = {
     Enrichment: <MailPlus color={defaultIconColour} strokeWidth={defaultStrokeWidth} />
-  }
+  };
 
   const totaCount = toolCategories.length;
 
@@ -41,7 +41,7 @@ export default function SideBar() {
     }
 
     return toolParam === category;
-  }, [toolParam])
+  }, [toolParam]);
 
   return (
     <div className={styles.sidebar}>
@@ -64,5 +64,5 @@ export default function SideBar() {
         </Link>
       ))}
     </div>
-  )
+  );
 }

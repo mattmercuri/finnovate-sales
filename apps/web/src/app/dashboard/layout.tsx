@@ -1,4 +1,4 @@
-import NavBar from "./_components/NavBar";
+import NavBar from './_components/NavBar';
 
 export default function DashboardLayout({
   children,
@@ -12,5 +12,5 @@ export default function DashboardLayout({
       </header>
       {children}
     </>
-  )
+  );
 }

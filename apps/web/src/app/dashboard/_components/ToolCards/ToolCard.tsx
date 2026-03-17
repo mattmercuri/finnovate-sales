@@ -1,8 +1,8 @@
-import Link from "next/link"
-import Image from "next/image"
-import styles from "./ToolCard.module.scss"
-import { type Tool } from "@/services/tools"
-import StatusLabel from "./StatusLabel"
+import Link from 'next/link';
+import Image from 'next/image';
+import styles from './ToolCard.module.scss';
+import { type Tool } from '@/services/tools';
+import StatusLabel from './StatusLabel';
 
 type ToolCardsProps = Tool
 
@@ -24,5 +24,5 @@ export default function ToolCard({
       <h3>{name}</h3>
       <p className={styles.description}>{description}</p>
     </Link>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-import Image from "next/image";
-import Link from "next/link";
-import ProfileSection from "./ProfileSection";
-import styles from "./NavBar.module.scss";
+import Image from 'next/image';
+import Link from 'next/link';
+import ProfileSection from './ProfileSection';
+import styles from './NavBar.module.scss';
 
 export default function NavBar() {
   return (
@@ -13,5 +13,5 @@ export default function NavBar() {
       <p className={styles.appName}>Sales</p>
       <ProfileSection />
     </nav>
-  )
+  );
 }

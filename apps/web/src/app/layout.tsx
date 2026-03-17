@@ -1,15 +1,15 @@
-import { Montserrat } from "next/font/google";
-import Providers from "./providers";
-import type { Metadata } from "next";
-import "./globals.css";
+import { Montserrat } from 'next/font/google';
+import Providers from './providers';
+import type { Metadata } from 'next';
+import './globals.css';
 
 const montserrat = Montserrat({
-  subsets: ["latin"],
-})
+  subsets: ['latin'],
+});
 
 export const metadata: Metadata = {
-  title: "Finnovate Sales",
-  description: "Finnovate Sales web app",
+  title: 'Finnovate Sales',
+  description: 'Finnovate Sales web app',
 };
 
 export default function RootLayout({
