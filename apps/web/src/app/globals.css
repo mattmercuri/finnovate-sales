@@ -10,7 +10,9 @@
 
 :root {
   --main-bg-colour: #171717;
+  --menu-bg-colour: #e4e4e4;
   --primary-text: #f0f0f0;
+  --danger: #bb0000;
 }
 
 @media (prefers-reduced-motion: no-preference) {

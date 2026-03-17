@@ -1,0 +1,19 @@
+.dropdown {
+  position: absolute;
+  left: -70%;
+
+
+  ul {
+    list-style: none;
+    padding: 0.25rem 1.25rem;
+    background-color: var(--menu-bg-colour);
+    border-radius: 0.25rem;
+    margin-top: 0.125rem;
+
+    a {
+      text-decoration: none;
+      color: var(--danger);
+      font-size: 1.1rem;
+    }
+  }
+}
