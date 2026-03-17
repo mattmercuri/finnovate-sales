@@ -1,6 +1,14 @@
 .toolCard {
   background-color: red;
   height: 16rem;
-  width: 16rem;
-  overflow: hidden;
+  width: 18rem;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background-color: var(--card-bg-colour);
+  border-radius: 0.5rem;
+
+  .description {
+    font-size: 0.875rem;
+  }
 }

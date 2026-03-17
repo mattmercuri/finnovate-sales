@@ -13,7 +13,7 @@ export default function ToolCard({
   return (
     <Link href={href} className={styles.toolCard}>
       <h3>{name}</h3>
-      <p>{description}</p>
+      <p className={styles.description}>{description}</p>
       <p>{status}</p>
     </Link>
   )
