@@ -21,7 +21,6 @@ export default function ToolCard({
       </div>
       <h3>{name}</h3>
       <p className={styles.description}>{description}</p>
-      <p>{status}</p>
     </Link>
   )
 }
