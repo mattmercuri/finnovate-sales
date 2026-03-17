@@ -50,7 +50,7 @@ export async function verifyOAuthState(stateToken: string) {
   return payload;
 }
 
-type SignJWtPayload = {
+export type SignJWtPayload = {
   sub: string; // user ID
   email: string;
   name?: string;
@@ -67,4 +67,13 @@ export async function signJWTToken(payload: SignJWtPayload, type: 'access' | 're
     .setAudience('finnovate-users')
     .setExpirationTime(`${expirationTime}s`)
     .sign(new TextEncoder().encode(authConfig.jwtSecret));
+}
+
+export async function verifyRefreshToken(refreshToken: string) {
+  const { payload } = await jwtVerify<SignJWtPayload>(refreshToken, new TextEncoder().encode(authConfig.jwtSecret), {
+    issuer: 'finnovate-sales',
+    audience: 'finnovate-users'
+  });
+
+  return payload;
 }

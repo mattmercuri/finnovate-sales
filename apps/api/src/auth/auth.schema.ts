@@ -20,3 +20,7 @@ export const CallbackSchema = z.object({
   success: z.boolean(),
   user: UserSchema.optional()
 }).openapi('OAuthCallbackResponse')
+
+export const RefreshResponseSchema = z.object({
+  success: z.boolean(),
+}).openapi('RefreshTokenResponse')

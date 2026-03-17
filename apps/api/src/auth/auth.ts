@@ -1,11 +1,32 @@
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 import crypto from 'node:crypto'
-import { getGoogleOAuthClient, getRedirectUrl, signOAuthState, verifyOAuthState, signJWTToken, authConfig } from './auth.services.js'
-import { CallbackSchema, OAuthRequestSchema, RequestGoogleOAuthSchema, UserSchema } from './auth.schema'
+import { getGoogleOAuthClient, getRedirectUrl, signOAuthState, verifyOAuthState, signJWTToken, authConfig, verifyRefreshToken, type SignJWtPayload } from './auth.services.js'
+import { CallbackSchema, OAuthRequestSchema, RefreshResponseSchema, RequestGoogleOAuthSchema, UserSchema } from './auth.schema'
+import type { Context } from 'hono'
 import type { Variables } from '../types'
 
 const auth = new OpenAPIHono<{ Variables: Variables }>()
+
+async function issueTokens(c: Context<{ Variables: Variables }>, payload: SignJWtPayload) {
+  const accessToken = await signJWTToken(payload, 'access')
+  const refreshToken = await signJWTToken(payload, 'refresh')
+
+  setCookie(c, 'access_token', accessToken, {
+    httpOnly: true,
+    secure: !c.var.environmentConfig.IS_DEV,
+    sameSite: 'strict',
+    maxAge: authConfig.accessExpiration,
+    path: '/'
+  })
+  setCookie(c, 'refresh_token', refreshToken, {
+    httpOnly: true,
+    secure: !c.var.environmentConfig.IS_DEV,
+    sameSite: 'strict',
+    maxAge: authConfig.refreshExpiration,
+    path: '/'
+  })
+}
 
 const requestOAuthRoute = createRoute({
   tags: ['Authentication'],
@@ -141,23 +162,7 @@ auth.openapi(callbackRoute, async (c) => {
     email: user.email,
     name: user.name || ''
   }
-  const accessToken = await signJWTToken(jwtPayload, 'access')
-  const refreshToken = await signJWTToken(jwtPayload, 'refresh')
-
-  setCookie(c, 'access_token', accessToken, {
-    httpOnly: true,
-    secure: !c.var.environmentConfig.IS_DEV,
-    sameSite: 'strict',
-    maxAge: authConfig.accessExpiration,
-    path: '/'
-  })
-  setCookie(c, 'refresh_token', refreshToken, {
-    httpOnly: true,
-    secure: !c.var.environmentConfig.IS_DEV,
-    sameSite: 'strict',
-    maxAge: authConfig.refreshExpiration,
-    path: '/'
-  })
+  await issueTokens(c, jwtPayload)
 
   return c.json({
     success: true,
@@ -212,6 +217,45 @@ auth.openapi(profileRoute, async (c) => {
     name: user.name,
     profilePicture: user.profileImageUrl
   })
+})
+
+const refreshRoutes = createRoute({
+  tags: ['Authentication'],
+  method: 'post',
+  path: '/refresh',
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: RefreshResponseSchema
+        }
+      },
+      description: 'Refresh access token'
+    },
+    400: {
+      description: 'Missing or invalid refresh token'
+    }
+  }
+})
+
+auth.openapi(refreshRoutes, async (c) => {
+  const refreshToken = getCookie(c, 'refresh_token')
+  if (!refreshToken) {
+    return c.json({ error: 'Missing refresh token' }, 400)
+  }
+
+  try {
+    const payload = await verifyRefreshToken(refreshToken)
+    const jwtPayload: SignJWtPayload = {
+      sub: payload.sub,
+      email: payload.email,
+      name: payload.name
+    }
+    await issueTokens(c, jwtPayload)
+    return c.json({ success: true })
+  } catch (error) {
+    return c.json({ error: 'Invalid refresh token' }, 400)
+  }
 })
 
 export default auth
