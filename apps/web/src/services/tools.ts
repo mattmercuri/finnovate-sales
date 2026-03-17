@@ -1,7 +1,7 @@
 export const toolCategories = ['Enrichment'] as const;
 export type ToolCategory = (typeof toolCategories)[number];
 
-type ToolStatus = 'experimental' | 'stable' | 'deprecated';
+export type ToolStatus = 'experimental' | 'stable' | 'deprecated';
 
 export type Tool = {
   name: string,

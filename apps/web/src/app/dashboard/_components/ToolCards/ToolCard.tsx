@@ -2,6 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import styles from "./ToolCard.module.scss"
 import { type Tool } from "@/services/tools"
+import StatusLabel from "./StatusLabel"
 
 type ToolCardsProps = Tool
 
@@ -14,6 +15,7 @@ export default function ToolCard({
 }: ToolCardsProps) {
   return (
     <Link href={href} className={styles.toolCard}>
+      <StatusLabel status={status} />
       <div className={styles.imageContainer}>
         <Image src={imageSrc} alt={`${name} image`} fill />
       </div>
