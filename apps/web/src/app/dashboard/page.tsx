@@ -1,7 +1,9 @@
+import SideBar from "./_components/SideBar";
+
 export default function DashboardPage() {
   return (
     <>
-      <h1>Dashboard</h1>
+      <SideBar />
     </>
   )
 }
