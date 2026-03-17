@@ -28,6 +28,7 @@ import type {
   GetApiAuthMe200,
   OAuthCallbackRequest,
   OAuthCallbackResponse,
+  RefreshTokenResponse,
   RequestGoogleOAuthResponse
 } from '../../schemas';
 
@@ -312,3 +313,161 @@ export function useGetApiAuthMe<TData = Awaited<ReturnType<typeof getApiAuthMe>>
 
 
 
+export type postApiAuthRefreshResponse200 = {
+  data: RefreshTokenResponse
+  status: 200
+}
+
+export type postApiAuthRefreshResponse400 = {
+  data: void
+  status: 400
+}
+
+export type postApiAuthRefreshResponseSuccess = (postApiAuthRefreshResponse200) & {
+  headers: Headers;
+};
+export type postApiAuthRefreshResponseError = (postApiAuthRefreshResponse400) & {
+  headers: Headers;
+};
+
+export type postApiAuthRefreshResponse = (postApiAuthRefreshResponseSuccess | postApiAuthRefreshResponseError)
+
+export const getPostApiAuthRefreshUrl = () => {
+
+
+  
+
+  return `http://localhost:3001/api/auth/refresh`
+}
+
+export const postApiAuthRefresh = async ( options?: RequestInit): Promise<postApiAuthRefreshResponse> => {
+  
+  return customFetch<postApiAuthRefreshResponse>(getPostApiAuthRefreshUrl(),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+);}
+  
+
+
+
+export const getPostApiAuthRefreshMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthRefresh>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthRefresh>>, TError,void, TContext> => {
+
+const mutationKey = ['postApiAuthRefresh'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAuthRefresh>>, void> = () => {
+          
+
+          return  postApiAuthRefresh(requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAuthRefreshMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthRefresh>>>
+    
+    export type PostApiAuthRefreshMutationError = void
+
+    export const usePostApiAuthRefresh = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthRefresh>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAuthRefresh>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getPostApiAuthRefreshMutationOptions(options), queryClient);
+    }
+    export type postApiAuthLogoutResponse200 = {
+  data: void
+  status: 200
+}
+
+export type postApiAuthLogoutResponseSuccess = (postApiAuthLogoutResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiAuthLogoutResponse = (postApiAuthLogoutResponseSuccess)
+
+export const getPostApiAuthLogoutUrl = () => {
+
+
+  
+
+  return `http://localhost:3001/api/auth/logout`
+}
+
+export const postApiAuthLogout = async ( options?: RequestInit): Promise<postApiAuthLogoutResponse> => {
+  
+  return customFetch<postApiAuthLogoutResponse>(getPostApiAuthLogoutUrl(),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+);}
+  
+
+
+
+export const getPostApiAuthLogoutMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthLogout>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthLogout>>, TError,void, TContext> => {
+
+const mutationKey = ['postApiAuthLogout'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAuthLogout>>, void> = () => {
+          
+
+          return  postApiAuthLogout(requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAuthLogoutMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthLogout>>>
+    
+    export type PostApiAuthLogoutMutationError = unknown
+
+    export const usePostApiAuthLogout = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthLogout>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAuthLogout>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getPostApiAuthLogoutMutationOptions(options), queryClient);
+    }
+    

@@ -15,5 +15,12 @@
       color: var(--danger);
       font-size: 1.1rem;
     }
+
+    button {
+      all: unset;
+      cursor: pointer;
+      font-size: 1.1rem;
+      color: var(--danger);
+    }
   }
 }

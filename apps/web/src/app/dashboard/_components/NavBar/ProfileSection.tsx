@@ -3,13 +3,13 @@
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { useRequireAuth } from "./hooks/useRequireAuth"
+import useAuth from "@/hooks/useAuth"
 import styles from "./ProfileSection.module.scss"
 import ProfileDropdown from "./ProfileDropdown"
 
 
 export default function ProfileSection() {
-  const { status, user } = useRequireAuth()
+  const { status, user, logout } = useAuth()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
@@ -60,7 +60,7 @@ export default function ProfileSection() {
           >
             <Image src={user?.profilePicture} alt={`${user?.name}'s profile picture`} fill />
           </button>
-          <ProfileDropdown isOpen={isDropdownOpen} />
+          <ProfileDropdown isOpen={isDropdownOpen} logoutFunction={logout} />
         </div>
       )}
     </div>

@@ -11,4 +11,5 @@ export * from './oAuthCallbackRequest';
 export * from './oAuthCallbackResponse';
 export * from './oAuthCallbackResponseUser';
 export * from './postAuthGoogle200';
+export * from './refreshTokenResponse';
 export * from './requestGoogleOAuthResponse';
