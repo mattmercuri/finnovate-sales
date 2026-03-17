@@ -59,12 +59,13 @@ export type SignJWtPayload = {
 export async function signJWTToken(payload: SignJWtPayload, type: 'access' | 'refresh' = 'access') {
   const typeString = type === 'access' ? 'JWT' : 'refresh';
   const expirationTime = type === 'access' ? authConfig.accessExpiration : authConfig.refreshExpiration;
+  const audience = type === 'access' ? 'finnovate-users' : 'finnovate-users-refresh';
 
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256', typ: typeString })
     .setIssuedAt()
     .setIssuer('finnovate-sales')
-    .setAudience('finnovate-users')
+    .setAudience(audience)
     .setExpirationTime(`${expirationTime}s`)
     .sign(new TextEncoder().encode(authConfig.jwtSecret));
 }
@@ -72,7 +73,7 @@ export async function signJWTToken(payload: SignJWtPayload, type: 'access' | 're
 export async function verifyRefreshToken(refreshToken: string) {
   const { payload } = await jwtVerify<SignJWtPayload>(refreshToken, new TextEncoder().encode(authConfig.jwtSecret), {
     issuer: 'finnovate-sales',
-    audience: 'finnovate-users'
+    audience: 'finnovate-users-refresh'
   });
 
   return payload;

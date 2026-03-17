@@ -99,7 +99,6 @@ const callbackRoute = createRoute({
 auth.openapi(callbackRoute, async (c) => {
   const { code, state } = await c.req.json();
   const stateFromCookie = getCookie(c, 'google_oauth_state');
-  console.log('Received Google OAuth callback with code:', code, 'and state:', state, 'State from cookie:', stateFromCookie)
 
   if (!code || !state || !stateFromCookie) {
     return c.json({ error: 'Missing code or state' }, 400)
@@ -141,19 +140,24 @@ auth.openapi(callbackRoute, async (c) => {
   }
 
   const user = await c.var.db.user.upsert({
-    where: { email: claims.email },
+    where: { googleSubject: claims.sub },
     create: {
       email: claims.email,
       name: claims.name,
       givenName: claims.given_name,
       familyName: claims.family_name,
       profileImageUrl: claims.picture,
+      googleSubject: claims.sub,
+      lastLogin: new Date(),
+      signupDate: new Date(),
     },
     update: {
       name: claims.name,
+      email: claims.email,
       givenName: claims.given_name,
       familyName: claims.family_name,
       profileImageUrl: claims.picture,
+      lastLogin: new Date(),
     },
   })
 

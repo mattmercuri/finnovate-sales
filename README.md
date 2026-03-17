@@ -26,3 +26,4 @@ This project uses Orval to automatically generate the React-Query hooks (and ens
 - Ensure that only Finnovate users can get on the platform
 - Add refresh tokens to DB and make them revokable
 - Add testing
+- Try out Orval watch mode
