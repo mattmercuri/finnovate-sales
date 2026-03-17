@@ -59,7 +59,7 @@ auth.openapi(requestOAuthRoute, async (c) => {
     path: '/'
   })
 
-  const authUrl = await getRedirectUrl(stateToken, codeChallenge)
+  const authUrl = await getRedirectUrl(stateToken, codeChallenge, nonce)
 
   return c.json({ redirectTo: authUrl })
 })
@@ -110,9 +110,14 @@ auth.openapi(callbackRoute, async (c) => {
 
   const statePayload = await verifyOAuthState(state)
   const codeVerifier = statePayload.codeVerifier
+  const nonceFromState = statePayload.nonce
 
   if (typeof codeVerifier !== 'string' || !codeVerifier) {
     return c.json({ error: 'Invalid PKCE verifier' }, 400)
+  }
+
+  if (typeof nonceFromState !== 'string' || !nonceFromState) {
+    return c.json({ error: 'Invalid OIDC nonce' }, 400)
   }
 
   deleteCookie(c, 'google_oauth_state')
@@ -137,6 +142,10 @@ auth.openapi(callbackRoute, async (c) => {
 
   if (!claims || !claims.email || !claims.sub) {
     return c.json({ error: 'Invalid Google identity' }, 400)
+  }
+
+  if (typeof claims.nonce !== 'string' || claims.nonce !== nonceFromState) {
+    return c.json({ error: 'Invalid OIDC nonce' }, 400)
   }
 
   if (!claims.email_verified) {

@@ -28,13 +28,14 @@ export async function signOAuthState(payload: JWTPayload) {
     .sign(new TextEncoder().encode(authConfig.jwtSecret));
 }
 
-export async function getRedirectUrl(stateToken: string, codeChallenge: string) {
+export async function getRedirectUrl(stateToken: string, codeChallenge: string, nonce: string) {
   const googleOAuthClient = getGoogleOAuthClient();
   const authUrl = googleOAuthClient.generateAuthUrl({
     access_type: 'offline',
     scope: ['openid', 'email', 'profile'],
     prompt: 'consent',
     state: stateToken,
+    nonce,
     code_challenge: codeChallenge,
     code_challenge_method: 'S256' as CodeChallengeMethod,
   });
