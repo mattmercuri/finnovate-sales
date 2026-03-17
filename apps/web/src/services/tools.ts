@@ -8,7 +8,8 @@ export type Tool = {
   description: string,
   status: ToolStatus,
   category: ToolCategory,
-  href: string
+  href: string,
+  imageSrc: string
 }
 
 export const tools = [
@@ -17,6 +18,7 @@ export const tools = [
     description: "Enrich crunchbase exported sheets with best point-of-contact's email and phone number.",
     status: 'experimental',
     category: 'Enrichment',
-    href: '/dashboard/tools/crunchy-v2'
+    href: '/dashboard/tools/crunchy-v2',
+    imageSrc: '/crunchy.png'
   }
 ] as const satisfies Tool[];

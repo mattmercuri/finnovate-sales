@@ -7,9 +7,9 @@ import styles from "./ToolCards.module.scss";
 
 export default function ToolCards() {
   const searchParams = useSearchParams()
-  const toolParam = searchParams.get('tool') as ToolCategory | undefined;
+  const toolParam = searchParams.get('tool') as ToolCategory | 'all' | undefined;
   const filteredTools = tools.filter((tool) => {
-    if (!toolParam) return true;
+    if (!toolParam || toolParam === "all") return true;
     return tool.category === toolParam;
   })
 
