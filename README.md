@@ -20,3 +20,4 @@ This project uses Orval to automatically generate the React-Query hooks (and ens
 - Add instructions for Orval and Prisma
 - Ask Stephen about route guarding
 - Ask Stephen about custom fetch client
+- Add documentation about `/docs`
