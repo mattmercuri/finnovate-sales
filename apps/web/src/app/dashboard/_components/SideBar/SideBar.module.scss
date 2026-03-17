@@ -3,8 +3,9 @@
 .sidebar {
   display: flex;
   flex-direction: column;
+  padding-top: 1rem;
   width: 18rem;
-  padding-right: 0.5rem;
+  padding-right: 0.75rem;
   min-height: calc(100vh - 4rem);
   @include border(right);
 
