@@ -139,6 +139,10 @@ auth.openapi(callbackRoute, async (c) => {
     return c.json({ error: 'Invalid Google identity' }, 400)
   }
 
+  if (!claims.email_verified) {
+    return c.json({ error: 'Google account email is not verified' }, 400)
+  }
+
   const user = await c.var.db.user.upsert({
     where: { googleSubject: claims.sub },
     create: {
@@ -243,6 +247,12 @@ auth.openapi(refreshRoutes, async (c) => {
 
   try {
     const payload = await verifyRefreshToken(refreshToken)
+
+    await c.var.db.user.update({
+      where: { id: parseInt(payload.sub) },
+      data: { lastLogin: new Date() }
+    })
+
     const jwtPayload: SignJWtPayload = {
       sub: payload.sub,
       email: payload.email,
@@ -251,7 +261,7 @@ auth.openapi(refreshRoutes, async (c) => {
     await issueTokens(c, jwtPayload)
     return c.json({ success: true })
   } catch (error) {
-    return c.json({ error: 'Invalid refresh token' }, 400)
+    return c.json({ error: 'Error refreshing token' }, 400)
   }
 })
 
