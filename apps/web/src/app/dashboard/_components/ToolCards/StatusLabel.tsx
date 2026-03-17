@@ -30,7 +30,7 @@ export default function StatusLabel({ status }: StatusLabelProps) {
   return (
     <span
       className={styles.statusLabel}
-      style={{ color: colourMap[status], background: colourMap[status] + '30' }}
+      style={{ color: colourMap[status], background: colourMap[status] + '25' }}
     >
       {statusIcons[status]} {status}
     </span>

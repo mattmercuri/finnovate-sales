@@ -9,6 +9,7 @@ type ToolCardsProps = Tool
 export default function ToolCard({
   name,
   description,
+  category,
   status,
   href,
   imageSrc
@@ -19,6 +20,7 @@ export default function ToolCard({
       <div className={styles.imageContainer}>
         <Image src={imageSrc} alt={`${name} image`} fill />
       </div>
+      <p className={styles.category}>{category}</p>
       <h3>{name}</h3>
       <p className={styles.description}>{description}</p>
     </Link>

@@ -6,8 +6,15 @@
   flex-direction: column;
   padding: 1rem;
   background-color: var(--card-bg-colour);
+  border: 1px solid var(--card-bg-colour);
   border-radius: 0.25rem;
   overflow: hidden;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    border: 1px solid var(--primary-accent);
+    box-shadow: 0 0.25rem 0.75rem var(--primary-accent-transparent);
+  }
 
   .imageContainer {
     position: relative;
@@ -22,7 +29,15 @@
 
   h3 {
     font-size: 1.5rem;
-    margin: 0.5rem 0;
+    margin: 0.5rem 0 0.25rem 0;
+  }
+
+  .category {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.25rem;
+    text-transform: uppercase;
+    color: var(--primary-accent);
   }
 
   .description {
