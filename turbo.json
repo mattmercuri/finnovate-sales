@@ -25,8 +25,15 @@
       ]
     },
     "lint": {
+      "cache": false,
       "dependsOn": [
         "^lint"
+      ]
+    },
+    "lint:fix": {
+      "cache": false,
+      "dependsOn": [
+        "^lint:fix"
       ]
     },
     "check-types": {
