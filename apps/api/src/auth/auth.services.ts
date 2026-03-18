@@ -1,6 +1,6 @@
-import { type CodeChallengeMethod, OAuth2Client } from "google-auth-library";
-import { environmentConfig } from "../environment";
-import { jwtVerify, SignJWT, type JWTPayload } from 'jose'
+import { type CodeChallengeMethod, OAuth2Client } from 'google-auth-library';
+import { environmentConfig } from '../environment';
+import { jwtVerify, SignJWT, type JWTPayload } from 'jose';
 
 export const authConfig = {
   googleClientConfig: {
@@ -11,7 +11,7 @@ export const authConfig = {
   jwtSecret: environmentConfig.JWT_SECRET,
   accessExpiration: 60 * 15,
   refreshExpiration: 60 * 60 * 24 * 7
-}
+};
 
 export function getGoogleOAuthClient() {
   const client = new OAuth2Client(authConfig.googleClientConfig);
@@ -59,7 +59,8 @@ export type SignJWtPayload = {
 
 export async function signJWTToken(payload: SignJWtPayload, type: 'access' | 'refresh' = 'access') {
   const typeString = type === 'access' ? 'JWT' : 'refresh';
-  const expirationTime = type === 'access' ? authConfig.accessExpiration : authConfig.refreshExpiration;
+  const expirationTime = type === 'access' ?
+    authConfig.accessExpiration : authConfig.refreshExpiration;
   const audience = type === 'access' ? 'finnovate-users' : 'finnovate-users-refresh';
 
   return await new SignJWT(payload)
@@ -72,10 +73,15 @@ export async function signJWTToken(payload: SignJWtPayload, type: 'access' | 're
 }
 
 export async function verifyRefreshToken(refreshToken: string) {
-  const { payload } = await jwtVerify<SignJWtPayload>(refreshToken, new TextEncoder().encode(authConfig.jwtSecret), {
-    issuer: 'finnovate-sales',
-    audience: 'finnovate-users-refresh'
-  });
+  const { payload } = await jwtVerify<SignJWtPayload>(
+    refreshToken,
+    new TextEncoder().encode(
+      authConfig.jwtSecret),
+    {
+      issuer: 'finnovate-sales',
+      audience: 'finnovate-users-refresh'
+    }
+  );
 
   return payload;
 }

@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { config as dotenvConfig } from "dotenv";
+import { z } from 'zod';
+import { config as dotenvConfig } from 'dotenv';
 
 dotenvConfig();
 

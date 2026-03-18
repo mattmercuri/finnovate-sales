@@ -1,16 +1,31 @@
-import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
-import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
-import crypto from 'node:crypto'
-import { getGoogleOAuthClient, getRedirectUrl, signOAuthState, verifyOAuthState, signJWTToken, authConfig, verifyRefreshToken, type SignJWtPayload } from './auth.services.js'
-import { CallbackSchema, OAuthRequestSchema, RefreshResponseSchema, RequestGoogleOAuthSchema, UserSchema } from './auth.schema'
-import type { Context } from 'hono'
-import type { Variables } from '../types'
+import { createRoute, OpenAPIHono } from '@hono/zod-openapi';
+import { deleteCookie, getCookie, setCookie } from 'hono/cookie';
+import crypto from 'node:crypto';
+import {
+  getGoogleOAuthClient,
+  getRedirectUrl,
+  signOAuthState,
+  verifyOAuthState,
+  signJWTToken,
+  authConfig,
+  verifyRefreshToken,
+  type SignJWtPayload
+} from './auth.services.js';
+import {
+  CallbackSchema,
+  OAuthRequestSchema,
+  RefreshResponseSchema,
+  RequestGoogleOAuthSchema,
+  UserSchema
+} from './auth.schema';
+import type { Context } from 'hono';
+import type { Variables } from '../types';
 
-const auth = new OpenAPIHono<{ Variables: Variables }>()
+const auth = new OpenAPIHono<{ Variables: Variables }>();
 
 async function issueTokens(c: Context<{ Variables: Variables }>, payload: SignJWtPayload) {
-  const accessToken = await signJWTToken(payload, 'access')
-  const refreshToken = await signJWTToken(payload, 'refresh')
+  const accessToken = await signJWTToken(payload, 'access');
+  const refreshToken = await signJWTToken(payload, 'refresh');
 
   setCookie(c, 'access_token', accessToken, {
     httpOnly: true,
@@ -18,14 +33,14 @@ async function issueTokens(c: Context<{ Variables: Variables }>, payload: SignJW
     sameSite: 'strict',
     maxAge: authConfig.accessExpiration,
     path: '/'
-  })
+  });
   setCookie(c, 'refresh_token', refreshToken, {
     httpOnly: true,
     secure: !c.var.environmentConfig.IS_DEV,
     sameSite: 'strict',
     maxAge: authConfig.refreshExpiration,
     path: '/'
-  })
+  });
 }
 
 const requestOAuthRoute = createRoute({
@@ -42,14 +57,14 @@ const requestOAuthRoute = createRoute({
       description: 'Redirect to Google OAuth consent screen'
     }
   }
-})
+});
 
 auth.openapi(requestOAuthRoute, async (c) => {
-  const nonce = crypto.randomBytes(16).toString('hex')
-  const codeVerifier = crypto.randomBytes(32).toString('base64url')
-  const codeChallenge = crypto.createHash('sha256').update(codeVerifier).digest('base64url')
+  const nonce = crypto.randomBytes(16).toString('hex');
+  const codeVerifier = crypto.randomBytes(32).toString('base64url');
+  const codeChallenge = crypto.createHash('sha256').update(codeVerifier).digest('base64url');
 
-  const stateToken = await signOAuthState({ nonce, codeVerifier })
+  const stateToken = await signOAuthState({ nonce, codeVerifier });
 
   setCookie(c, 'google_oauth_state', stateToken, {
     httpOnly: true,
@@ -57,12 +72,12 @@ auth.openapi(requestOAuthRoute, async (c) => {
     sameSite: 'strict',
     maxAge: 60 * 5,
     path: '/'
-  })
+  });
 
-  const authUrl = await getRedirectUrl(stateToken, codeChallenge, nonce)
+  const authUrl = await getRedirectUrl(stateToken, codeChallenge, nonce);
 
-  return c.json({ redirectTo: authUrl })
-})
+  return c.json({ redirectTo: authUrl });
+});
 
 const callbackRoute = createRoute({
   tags: ['Authentication'],
@@ -94,33 +109,33 @@ const callbackRoute = createRoute({
     }
   }
 
-})
+});
 
 auth.openapi(callbackRoute, async (c) => {
   const { code, state } = await c.req.json();
   const stateFromCookie = getCookie(c, 'google_oauth_state');
 
   if (!code || !state || !stateFromCookie) {
-    return c.json({ error: 'Missing code or state' }, 400)
+    return c.json({ error: 'Missing code or state' }, 400);
   }
 
   if (state !== stateFromCookie) {
-    return c.json({ error: 'Invalid state' }, 400)
+    return c.json({ error: 'Invalid state' }, 400);
   }
 
-  const statePayload = await verifyOAuthState(state)
-  const codeVerifier = statePayload.codeVerifier
-  const nonceFromState = statePayload.nonce
+  const statePayload = await verifyOAuthState(state);
+  const codeVerifier = statePayload.codeVerifier;
+  const nonceFromState = statePayload.nonce;
 
   if (typeof codeVerifier !== 'string' || !codeVerifier) {
-    return c.json({ error: 'Invalid PKCE verifier' }, 400)
+    return c.json({ error: 'Invalid PKCE verifier' }, 400);
   }
 
   if (typeof nonceFromState !== 'string' || !nonceFromState) {
-    return c.json({ error: 'Invalid OIDC nonce' }, 400)
+    return c.json({ error: 'Invalid OIDC nonce' }, 400);
   }
 
-  deleteCookie(c, 'google_oauth_state')
+  deleteCookie(c, 'google_oauth_state');
 
   const googleOAuthClient = getGoogleOAuthClient();
   const { tokens } = await googleOAuthClient.getToken({
@@ -130,7 +145,7 @@ auth.openapi(callbackRoute, async (c) => {
   });
 
   if (!tokens || !tokens.id_token) {
-    return c.json({ error: 'Failed to obtain tokens' }, 500)
+    return c.json({ error: 'Failed to obtain tokens' }, 500);
   }
 
   const ticket = await googleOAuthClient.verifyIdToken({
@@ -141,15 +156,15 @@ auth.openapi(callbackRoute, async (c) => {
   const claims = ticket.getPayload();
 
   if (!claims || !claims.email || !claims.sub) {
-    return c.json({ error: 'Invalid Google identity' }, 400)
+    return c.json({ error: 'Invalid Google identity' }, 400);
   }
 
   if (typeof claims.nonce !== 'string' || claims.nonce !== nonceFromState) {
-    return c.json({ error: 'Invalid OIDC nonce' }, 400)
+    return c.json({ error: 'Invalid OIDC nonce' }, 400);
   }
 
   if (!claims.email_verified) {
-    return c.json({ error: 'Google account email is not verified' }, 400)
+    return c.json({ error: 'Google account email is not verified' }, 400);
   }
 
   const user = await c.var.db.user.upsert({
@@ -172,14 +187,14 @@ auth.openapi(callbackRoute, async (c) => {
       profileImageUrl: claims.picture,
       lastLogin: new Date(),
     },
-  })
+  });
 
   const jwtPayload = {
     sub: user.id.toString(),
     email: user.email,
     name: user.name || ''
-  }
-  await issueTokens(c, jwtPayload)
+  };
+  await issueTokens(c, jwtPayload);
 
   return c.json({
     success: true,
@@ -189,8 +204,8 @@ auth.openapi(callbackRoute, async (c) => {
       name: user.name,
       profilePicture: user.profileImageUrl
     }
-  })
-})
+  });
+});
 
 const profileRoute = createRoute({
   tags: ['Authentication'],
@@ -209,16 +224,16 @@ const profileRoute = createRoute({
       description: 'User not found'
     }
   }
-})
+});
 
 auth.openapi(profileRoute, async (c) => {
-  const userId = c.var.jwtPayload.sub
+  const userId = c.var.jwtPayload.sub;
   const user = await c.var.db.user.findUnique({
     where: { id: parseInt(userId) }
-  })
+  });
 
   if (!user) {
-    return c.json({ error: 'User not found' }, 404)
+    return c.json({ error: 'User not found' }, 404);
   }
 
   return c.json({
@@ -226,8 +241,8 @@ auth.openapi(profileRoute, async (c) => {
     email: user.email,
     name: user.name,
     profilePicture: user.profileImageUrl
-  })
-})
+  });
+});
 
 const refreshRoutes = createRoute({
   tags: ['Authentication'],
@@ -246,36 +261,36 @@ const refreshRoutes = createRoute({
       description: 'Missing or invalid refresh token'
     }
   }
-})
+});
 
 auth.openapi(refreshRoutes, async (c) => {
-  const refreshToken = getCookie(c, 'refresh_token')
+  const refreshToken = getCookie(c, 'refresh_token');
   if (!refreshToken) {
-    return c.json({ error: 'Missing refresh token' }, 400)
+    return c.json({ error: 'Missing refresh token' }, 400);
   }
 
   try {
-    const payload = await verifyRefreshToken(refreshToken)
+    const payload = await verifyRefreshToken(refreshToken);
 
     await c.var.db.user.update({
       where: { id: parseInt(payload.sub) },
       data: { lastLogin: new Date() }
-    })
+    });
 
     const jwtPayload: SignJWtPayload = {
       sub: payload.sub,
       email: payload.email,
       name: payload.name
-    }
-    await issueTokens(c, jwtPayload)
-    return c.json({ success: true })
+    };
+    await issueTokens(c, jwtPayload);
+    return c.json({ success: true });
   } catch (error) {
     if (error instanceof Error) {
-      return c.json({ error: `Error refreshing token: ${error.message}` }, 400)
+      return c.json({ error: `Error refreshing token: ${error.message}` }, 400);
     }
-    return c.json({ error: 'Error refreshing token' }, 400)
+    return c.json({ error: 'Error refreshing token' }, 400);
   }
-})
+});
 
 const logoutRoute = createRoute({
   tags: ['Authentication'],
@@ -286,13 +301,13 @@ const logoutRoute = createRoute({
       description: 'Logout successful'
     }
   }
-})
+});
 
 auth.openapi(logoutRoute, async (c) => {
-  deleteCookie(c, 'access_token')
-  deleteCookie(c, 'refresh_token')
+  deleteCookie(c, 'access_token');
+  deleteCookie(c, 'refresh_token');
 
-  return c.json({ success: true })
-})
+  return c.json({ success: true });
+});
 
-export default auth
+export default auth;
