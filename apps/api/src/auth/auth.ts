@@ -270,6 +270,9 @@ auth.openapi(refreshRoutes, async (c) => {
     await issueTokens(c, jwtPayload)
     return c.json({ success: true })
   } catch (error) {
+    if (error instanceof Error) {
+      return c.json({ error: `Error refreshing token: ${error.message}` }, 400)
+    }
     return c.json({ error: 'Error refreshing token' }, 400)
   }
 })
