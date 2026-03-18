@@ -7,7 +7,7 @@ export default function NavBar() {
   return (
     <nav className={styles.nav}>
       <Link href='/dashboard' className={styles.logoContainer}>
-        <Image src='/logo-white.svg' alt='finnovate logo in navigation bar' fill />
+        <Image src='/logo-white.svg' alt='finnovate logo in navigation bar' fill loading='eager' />
       </Link>
       <span>|</span>
       <p className={styles.appName}>Sales</p>
