@@ -3,7 +3,7 @@
 import { useCallback, type JSX } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Grip, MailPlus } from 'lucide-react';
+import { Grip, MailPlus, Scale } from 'lucide-react';
 import { toolCategories, type ToolCategory } from '@/services/tools';
 import styles from './SideBar.module.scss';
 
@@ -18,7 +18,8 @@ export default function SideBar() {
   const defaultIconColour = '#f0f0f0';
   const defaultStrokeWidth = 1;
   const categoryIcons: Record<ToolCategory, JSX.Element> = {
-    Enrichment: <MailPlus color={defaultIconColour} strokeWidth={defaultStrokeWidth} />
+    Enrichment: <MailPlus color={defaultIconColour} strokeWidth={defaultStrokeWidth} />,
+    Operations: <Scale color={defaultIconColour} strokeWidth={defaultStrokeWidth} />
   };
 
   const totaCount = toolCategories.length;
